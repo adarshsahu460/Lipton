@@ -10,6 +10,12 @@ export default async function(email){
             email
         }
     })
+    if(!user){
+        return {
+            status:500,
+            message:"User not found"
+        }
+    }
     await prisma.oTP.create({
         data:{
             otp,

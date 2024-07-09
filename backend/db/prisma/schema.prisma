@@ -48,7 +48,8 @@ model User{
   email     String   @unique
   password  String
   name      String
-  balance   Int
+  mobile    String
+  balance   Int      @default(0)
   otps      OTP[]
   orders    Order[]
 }

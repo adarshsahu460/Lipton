@@ -1,13 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from 'bcrypt'
-import { json } from "express";
 
 const prisma = new PrismaClient()
 
 export default async function login(email, password) {
     const user = await prisma.admin.findFirst({
-        where: {        
-            name: email
+        where: {  
+            email
         }
     })
     if (!user) {
@@ -18,7 +17,6 @@ export default async function login(email, password) {
     }
     const result = await bcrypt.compare(password, user.password)
     if (result) {
-        console.log('Correct password')
         return {
             status: 200,
             message: "Login successful",
