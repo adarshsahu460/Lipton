@@ -16,9 +16,10 @@ datasource db {
 
 model Admin {
   id        Int      @id @default(autoincrement())
-  email     String
+  email     String   @unique
   password  String
   menuItems MenuItems[]
+  adminOTP  AdminOTP[]
 }
 
 model MenuItems{
@@ -50,15 +51,24 @@ model User{
   name      String
   mobile    String
   balance   Int      @default(0)
-  otps      OTP[]
+  otps      UserOTP[]
   orders    Order[]
 }
 
 
-model OTP{
+model UserOTP{
   id        Int      @id @default(autoincrement())
   otp       String   
   userId    Int      @unique
   user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+
+model AdminOTP{
+  id        Int      @id @default(autoincrement())
+  otp       String   
+  adminID   Int      @unique
+  admin     Admin    @relation(fields: [adminID], references: [id])
   createdAt DateTime @default(now())
 }

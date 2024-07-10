@@ -1,24 +1,44 @@
 import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
-export default async function(pass,name,email,mob){
-    try{
-        await prisma.user.create({
-            data:{
-                password:pass,
-                name,
-                email,
-                mobile:mob
+export default async function(email,pass,admin,name,mob){
+    if(admin){
+        try{
+            await prisma.admin.create({
+                data:{
+                    password:pass,
+                    email
+                }
+            })
+            return {
+                status:200,
+                message:"Admin created"
             }
-        })
-        return {
-            status:200,
-            message:"User created"
+        }catch(e){
+            return {
+                status:400,
+                message:"Error creating admin"
+            }
         }
-    }catch(e){
-        return {
-            status:400,
-            message:"Error creating user"
+    }else{
+        try{
+            await prisma.user.create({
+                data:{
+                    password:pass,
+                    name,
+                    email,
+                    mobile:mob
+                }
+            })
+            return {
+                status:200,
+                message:"User created"
+            }
+        }catch(e){
+            return {
+                status:400,
+                message:"Error creating user"
+            }
         }
     }
 }
