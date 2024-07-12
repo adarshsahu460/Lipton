@@ -9,8 +9,11 @@ import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import register from './actions/register.js'
 import { emailSchema, otpSchema, passwordSchema,nameSchema,phoneNumberSchema } from './validation/index.js'
+import cors from "cors";
 
 const app = express()
+app.use(cors());
+
 const prisma = new PrismaClient()
 app.use(express.json())
 dotenv.config();
@@ -261,7 +264,7 @@ app.post(`${process.env.URL}/user/register`, async (req, res) => {
     else res.status(response.status).json({token})
 })
 
-app.listen(8080, () => {
-    console.log('Server is running on port 8080')
+app.listen(3000, () => {
+    console.log('Server is running on port 3000')
 })
 
