@@ -14,8 +14,8 @@ export function SignUp(){
     const [password, setPassword] = useState("");
     const [mobile, setMobile] = useState("");
 
-    function getAlert(type){
-        AlertBox(type);
+    function getAlert(type,msg){
+        AlertBox(type,msg);
     }
 
     async function SignUpHelper (){
@@ -27,17 +27,12 @@ export function SignUp(){
                 name : name
             });
             
-            if(res.status == 200){
-                // storing token into localstorage
-                localStorage.setItem("token", res.data.token);
-
-                await getAlert(1);
-            }else{
-                await getAlert(2);
-            }
-
+            // storing token into localstorage
+            localStorage.setItem("token", res.data.token);
+            getAlert(1,"Signed up successfully");
         }catch(err){
-            await getAlert(2);
+            console.log(err.response)
+            getAlert(2,err.response.data);
         }
     }
 
