@@ -23,7 +23,7 @@ export function SignUp(){
             const res = await axios.post("http://localhost:3000/api/v1/admin/register", {
                 email : email,
                 password : password,
-                mob : mobile,
+                mobile : mobile,
                 name : name
             });
             
