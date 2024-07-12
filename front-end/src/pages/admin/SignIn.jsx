@@ -17,18 +17,11 @@ export function SignIn(){
             const res = await axios.post("http://localhost:3000/api/v1/admin/login", {
                 email : email,
                 password : password
-            });
-            
-            if(res.status == 200){
-                localStorage.setItem("token", res.data.token);
-                AlertBox(1);
-            }else{
-                console.log(res.data);
-                AlertBox(2);
-            }
+            });            
+            localStorage.setItem("token", res.data.token);
+            AlertBox(1,"Login Successfull");
         }catch(err){
-            console.log(err.response.data);
-            AlertBox(2);
+            AlertBox(2,err.response.data.message);
         }
     }
 

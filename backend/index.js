@@ -64,7 +64,6 @@ app.post(`${process.env.URL}/admin/register`, async (req, res) => {
     const pass = req.body.password
 
     if(!email ||!pass) return res.status(400).json({message:"Please fill all the fields"})
-
     // zod validation for email and password
     const {success : emailSuccess} = emailSchema.safeParse(email)
     if(!emailSuccess) return res.status(400).json({message:"Please provide a valid email"})

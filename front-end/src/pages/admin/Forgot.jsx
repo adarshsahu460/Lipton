@@ -18,30 +18,20 @@ export function Forgot(){
     async function ForgotHelper (){
         try{
             if(password == "" || (password != cpassword)){
-                AlertBox(2); return;
+                AlertBox(2,"Please enter the password again"); return;
             }
 
             const res = await axios.post("http://localhost:3000/api/v1/admin/verify", {
                 email : email,
                 otp : otp
             });
-
-            if(res.status != 200){
-                AlertBox(2); return;
-            }
-
             const res1 = await axios.put("http://localhost:3000/api/v1/admin/updatePass", {
                 email : email,
                 password : password
             });
-
-            if(res.status != 200){
-                AlertBox(2); return;
-            }
-
-            AlertBox(1);
+            AlertBox(1,res1.data.message);
         }catch(err){
-            AlertBox(2);
+            AlertBox(2,err.response.data.message);
         }
     }
 
@@ -51,10 +41,10 @@ export function Forgot(){
             email : email
         });
 
-        if(res.status == 200){
-            AlertBox(1);
-        }else{
-            AlertBox(0);
+        try{
+            AlertBox(1,res.data.message)
+        }catch(e){
+            AlertBox(2,err.response.data.message)
         }
 
     }
