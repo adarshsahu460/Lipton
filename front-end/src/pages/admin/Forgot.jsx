@@ -14,39 +14,34 @@ export function Forgot(){
     const [password, setPassword] = useState("");
     const [cpassword, setCPassword] = useState("");
     const [otp, setOtp] = useState("");
-
     async function ForgotHelper (){
         try{
             if(password == "" || (password != cpassword)){
                 AlertBox(2,"Please enter the password again"); return;
             }
-
-            const res = await axios.post("http://localhost:3000/api/v1/admin/verify", {
+            const res = await axios.post(`${import.meta.env.VITE_URL}/admin/verify`, {
                 email : email,
                 otp : otp
             });
-            const res1 = await axios.put("http://localhost:3000/api/v1/admin/updatePass", {
+            const res1 = await axios.put(`${import.meta.env.VITE_URL}/admin/updatePass`, {
                 email : email,
                 password : password
             });
-            AlertBox(1,res1.data.message);
+            AlertBox(1,"Updated the password successfully");
         }catch(err){
-            AlertBox(2,err.response.data.message);
+            AlertBox(2,err.response.data);
         }
     }
 
     async function getOTP(){
-        console.log(email);
-        const res = await axios.post("http://localhost:3000/api/v1/admin/forgot", {
-            email : email
-        });
-
         try{
+            const res = await axios.post(`${import.meta.env.VITE_URL}/admin/forgot`, {
+                email : email
+            });
             AlertBox(1,res.data.message)
         }catch(e){
-            AlertBox(2,err.response.data.message)
+            AlertBox(2,e.response.data.message)
         }
-
     }
 
     return (
@@ -65,11 +60,10 @@ export function Forgot(){
 
                 <InputBox label={"OTP"} placeholder={"Enter OTP"} type={"text"} onClick={(e)=> { setOtp(e.target.value) }} />
                 <InputBox label={"New Password"}placeholder={"Enter password"} type={"password"} onClick={(e)=> { setPassword(e.target.value) }} />
-                <InputBox label={"Conform Password"}placeholder={"Enter password"} type={"password"} onClick={(e)=> { setCPassword(e.target.value) }} />
+                <InputBox label={"Confirm Password"}placeholder={"Enter password"} type={"password"} onClick={(e)=> { setCPassword(e.target.value) }} />
                 <Button text={"Let's Go"}  onClick={()=>{
                     ForgotHelper();
                 }} />
-
                 <div className="flex justify-center mt-5 font-semibold text-sm text-gray-600">
                     <Link to={"admin/signin"}> Go To Login </Link>
                 </div>

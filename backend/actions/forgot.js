@@ -16,6 +16,24 @@ export async function userForgot(email){
             message:"User not found"
         }
     }
+    const existingOTP = await prisma.userOTP.findUnique({
+        where:{
+            userId:user.id
+        }
+    })
+    if(existingOTP && existingOTP.createdAt.getTime() >= Date.now() - 10*60*1000){
+        return {
+            status:400,
+            message:"OTP already sent"
+        }
+    }else if(existingOTP){
+        await prisma.userOTP.delete({
+            where:{
+                userId:user.id
+            }
+        })
+    }
+    
     await prisma.userOTP.create({
         data:{
             otp,
@@ -46,9 +64,26 @@ export async function adminForgot(email){
     })
     if(!user){
         return {
-            status:500,
+            status:400,
             message:"Admin not found"
         }
+    }
+    const existingOTP = await prisma.adminOTP.findUnique({
+        where:{
+            adminID:user.id
+        }
+    })
+    if(existingOTP && existingOTP.createdAt.getTime() >= Date.now() - 10*60*1000 ){
+        return {
+            status:400,
+            message:"OTP already sent"
+        }
+    }else if(existingOTP){
+        await prisma.adminOTP.delete({
+            where:{
+                id:existingOTP.id
+            }
+        })
     }
     await prisma.adminOTP.create({
         data:{
@@ -64,7 +99,7 @@ export async function adminForgot(email){
         }
     }else{
         return {
-            status:500,
+            status:400,
             message:"OTP not sent"
         }
     }
