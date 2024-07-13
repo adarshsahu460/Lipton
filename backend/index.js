@@ -10,10 +10,10 @@ import bcrypt from 'bcrypt'
 import register from './actions/register.js'
 import { emailSchema, otpSchema, passwordSchema,nameSchema,phoneNumberSchema } from './validation/index.js'
 import cors from "cors";
+import searchMenuItem from './actions/searchMenuItem.js'
 
 const app = express()
 app.use(cors());
-
 const prisma = new PrismaClient()
 app.use(express.json())
 dotenv.config();
@@ -143,6 +143,11 @@ app.put(`${process.env.URL}/admin/updatePass`,async (req,res) =>{
     else res.status(response.status).json({token})
 })
 
+app.get(`${process.env.URL}/admin/getItems`,async(req,res)=>{
+    const str = req.query.str
+    const items = await searchMenuItem(str)
+    res.json(items)
+})
 
 // User ---------------------------------------------------------------------------------------------------------------
 
