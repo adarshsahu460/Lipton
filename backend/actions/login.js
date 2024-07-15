@@ -23,7 +23,6 @@ export async function adminLogin(email, password) {
             id: user.id
         }
     } else {
-        console.log('Incorrect password')
         return {
             status: 400,
             message: "Password is incorrect"
@@ -51,7 +50,6 @@ export async function userLogin(email, password) {
             id: user.id
         }
     } else {
-        console.log('Incorrect password')
         return {
             status: 400,
             message: "Password is incorrect"

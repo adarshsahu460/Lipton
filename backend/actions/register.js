@@ -17,7 +17,6 @@ export default async function(email,pass,admin,name,mob){
                 message:"Admin created"
             }
         }catch(e){
-            console.log("Message : " + e);
             return {
                 status:400,
                 message:"Error creating admin"

@@ -77,8 +77,12 @@ app.post(`${process.env.URL}/admin/register`, async (req, res) => {
     if(!mobSuccess) return res.status(400).json({message:"Please provide a valid phone number"})
 
 
-    const alreadyExist = await adminLogin(email,pass)
-    if(alreadyExist.status===200){
+    const alreadyExist = await prisma.admin.findUnique({
+        where: {
+            email
+        }
+    })
+    if(alreadyExist){
         return res.status(200).json({message:"Account already exist"})
     }
     

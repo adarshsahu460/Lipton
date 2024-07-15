@@ -2,8 +2,8 @@
 import {Heading} from "../../components/Heading.jsx"
 import {Button} from "../../components/Button.jsx"
 import {InputBox} from "../../components/InputBox.jsx"
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {AlertBox} from "../../components/AlertBox.jsx"
 
@@ -11,6 +11,18 @@ export function SignIn(){
     
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigation = useNavigate();
+
+    useEffect(()=>{
+        const token = localStorage.getItem("lipton-token");
+        if(token){
+            axios.get("http://localhost:3000/api/v1/admin/login",{
+                headers:{
+                    Authorization:token
+                }
+            }).then(()=>{navigation('/admin/dashboard')}).catch((e)=>{})
+        }
+    },[])
 
     async function SignInHelper (){
         try{
@@ -18,10 +30,11 @@ export function SignIn(){
                 email : email,
                 password : password
             });            
-            localStorage.setItem("token", res.data.token);
+            localStorage.setItem("lipton-token", res.data.token);
             AlertBox(1,"Login Successfull");
+            navigation('/admin/dashboard')
         }catch(err){
-            AlertBox(2,err.response.data.message);
+            AlertBox(2,err.response.data);
         }
     }
 
@@ -36,7 +49,7 @@ export function SignIn(){
                 }} />
 
                 <div className="flex justify-center mt-5 font-semibold text-sm text-gray-600">
-                    <Link to={"/signup"}> Don't have an Account? </Link>
+                    <Link to={"/admin/signup"}> Don't have an Account? </Link>
                 </div>
             </div>      
         </div>
