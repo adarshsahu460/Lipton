@@ -2,6 +2,8 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import AdminHome from './AdminHome';
 import SideBar from "../../components/sidebar/index.jsx"
+import {AdminHeader} from "../../components/AdminHeader.jsx"
+import {Billing} from "./Billing.jsx"
 
 const Dashboard = () => {
   return (
@@ -12,13 +14,18 @@ const Dashboard = () => {
             </div>
 
             {/* Internal Routes for Dashboard page */}
-            <section className=' w-[85%]'>
-                <Routes>
-                    <Route path="home" element={<AdminHome />} />
-                    <Route path="manage" element={<div>Manage</div>} />
-                    <Route path="bill" element={<div>bill</div>} />
-                </Routes>
-            </section>
+            <div className='flex flex-col w-[85%]'>
+              <div className='header'>
+                    <AdminHeader />
+              </div>
+              <div className=' w-[100%] mt-3 p-4 border border-black'>
+                  <Routes>
+                      <Route path="home" element={<AdminHome />} />
+                      <Route path="manage" element={<div>Manage</div>} />
+                      <Route path="bill" element={<Billing />} />
+                  </Routes>
+              </div>
+            </div>
       </div>
     </>
   );
