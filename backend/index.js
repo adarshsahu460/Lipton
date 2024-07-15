@@ -11,6 +11,9 @@ import bcrypt from 'bcrypt'
 import register from './actions/register.js'
 import { emailSchema, otpSchema, passwordSchema,nameSchema,phoneNumberSchema } from './validation/index.js'
 import cors from "cors";
+import payLater from './actions/payLater.js'
+import getPending from './actions/getPending.js'
+import payNow from './actions/payNow.js'
 
 const app = express()
 app.use(cors());
@@ -161,6 +164,23 @@ app.get(`${process.env.URL}/admin/getItems`,async(req,res)=>{
     res.json(items)
 })
 
+app.post(`${process.env.URL}/admin/payLater`,async(req,res)=>{
+    const pending = req.body.pending
+    const response = await payLater(pending)
+    return res.status(response.status).json(response.message)
+})
+
+app.get(`${process.env.URL}/admin/getPending`,async(req,res)=>{
+    const userId = req.query.userId
+    const response = await getPending(userId)
+    return res.status(response.status).json(response.message)
+})
+
+app.post(`${process.env.URL}/admin/payNow`,async(req,res)=>{
+    const userId = req.body.userId
+    const response = await payNow(userId)
+    return res.status(response.status).json(response.message)
+})
 // User ---------------------------------------------------------------------------------------------------------------
 
 app.get(`${process.env.URL}/user/login`, async (req, res) => {
