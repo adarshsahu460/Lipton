@@ -32,6 +32,8 @@ export default function SideBar(){
             </div>
             {MenuItem("DashBoard", <MdOutlineDashboard />, )}
             {MenuItem("Products", <MdProductionQuantityLimits />, )}
+            {MenuItem("Billing", <MdProductionQuantityLimits />, )}
+            {MenuItem("Users", <MdProductionQuantityLimits />, )}
         </div>
     </>
 }
