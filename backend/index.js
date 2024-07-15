@@ -150,6 +150,11 @@ app.put(`${process.env.URL}/admin/updatePass`,async (req,res) =>{
     else res.status(response.status).json({token})
 })
 
+app.get(`${process.env.URL}/admin/getItems`,async(req,res)=>{
+    const str = req.query.str
+    const items = await searchMenuItem(str)
+    res.json(items)
+})
 
 // User ---------------------------------------------------------------------------------------------------------------
 
