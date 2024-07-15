@@ -10,10 +10,10 @@ import bcrypt from 'bcrypt'
 import register from './actions/register.js'
 import { emailSchema, otpSchema, passwordSchema,nameSchema,phoneNumberSchema } from './validation/index.js'
 import cors from "cors";
-import searchMenuItem from './actions/searchMenuItem.js'
 
 const app = express()
 app.use(cors());
+
 const prisma = new PrismaClient()
 app.use(express.json())
 dotenv.config();
@@ -54,7 +54,7 @@ app.post(`${process.env.URL}/admin/login`,async (req, res) => {
     if(!passwordSuccess) return res.status(400).json({message:"Password must be at least 8 characters and maximum 16 characters"})
 
     const response = await adminLogin(email,password)
-    if(response.status == 400) return res.status(response.status).json({message:response.message});
+    if(response.status == 400) return res.status(response.status).json(response.message);
     const token = jwt.sign({email,password},process.env.SECRET_KEY)
     return res.status(response.status).json({token})
 })
@@ -62,25 +62,32 @@ app.post(`${process.env.URL}/admin/login`,async (req, res) => {
 app.post(`${process.env.URL}/admin/register`, async (req, res) => {
     const email = req.body.email
     const pass = req.body.password
+    const name = req.body.name
+    const mob = req.body.mobile
 
-    if(!email ||!pass) return res.status(400).json({message:"Please fill all the fields"})
-    // zod validation for email and password
-    const {success : emailSuccess} = emailSchema.safeParse(email)
+    if(!email ||!pass ||!name ||!mob) return res.status(400).json({message:"Please fill all the fields"})
+    const{success : emailSuccess} = emailSchema.safeParse(email)
     if(!emailSuccess) return res.status(400).json({message:"Please provide a valid email"})
     const {success : passSuccess} = passwordSchema.safeParse(pass)
     if(!passSuccess) return res.status(400).json({message:"Password must be at least 8 characters and maximum 16 characters"})
-    
+    const {success : nameSuccess} = nameSchema.safeParse(name)
+    if(!nameSuccess) return res.status(400).json({message:"Name must be at least 3 characters and maximum 20 characters"})
+    const {success : mobSuccess} = phoneNumberSchema.safeParse(mob)
+    if(!mobSuccess) return res.status(400).json({message:"Please provide a valid phone number"})
+
+
     const alreadyExist = await adminLogin(email,pass)
     if(alreadyExist.status===200){
-        return res.status(200).json({message:"Admin already exist"})
+        return res.status(200).json({message:"Account already exist"})
     }
     
     const token = jwt.sign({
         email,
         password: pass
     },process.env.SECRET_KEY)
+    
     const hash = await bcrypt.hash(pass,10)
-    const response = await register(email,hash,true)
+    const response = await register(email,hash,true, name, mob)
     if(response.status == 400) return res.status(response.status).json(response.message);
     else return res.status(response.status).json({token})
 })
@@ -95,7 +102,7 @@ app.post(`${process.env.URL}/admin/forgot`, async (req, res) => {
     if(!emailSuccess) return res.status(400).json({message:"Please provide a valid email"})
 
     const response = await adminForgot(email)
-    return res.status(response.status).json({message:response.message})
+    return res.status(response.status).json(response.message)
 })
 
 app.post(`${process.env.URL}/admin/verify`, async (req, res) => {
@@ -139,15 +146,10 @@ app.put(`${process.env.URL}/admin/updatePass`,async (req,res) =>{
     },process.env.SECRET_KEY)
     const hash = await bcrypt.hash(pass,10)
     const response = await adminUpdatePass(hash,email)
-    if(response.status==500) res.status(response.status).json({message:response.message})
+    if(response.status==500) res.status(response.status).json(response.message)
     else res.status(response.status).json({token})
 })
 
-app.get(`${process.env.URL}/admin/getItems`,async(req,res)=>{
-    const str = req.query.str
-    const items = await searchMenuItem(str)
-    res.json(items)
-})
 
 // User ---------------------------------------------------------------------------------------------------------------
 

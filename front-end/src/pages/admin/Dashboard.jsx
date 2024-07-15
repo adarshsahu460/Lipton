@@ -1,33 +1,27 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { redirect, useNavigate } from "react-router-dom";
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import AdminHome from './AdminHome';
+import SideBar from "../../components/sidebar/index.jsx"
 
-export function Dashboard() {
-    const [userId,setUserId] = useState("");
-    const navigate = useNavigate()
-    useEffect(()=>{
-        async function tryLogin(){
-            try{
-                const res = await axios.get(`${import.meta.env.VITE_URL}/admin/login`, {
-                    headers: {
-                        "authorization": localStorage.getItem("canteen-token")
-                    }
-                });
-                setUserId(res.data);
-            }catch(err){
-                console.log(err);
-                navigate("/admin/signin");
-            }
-        }
-        tryLogin();
-    },[navigate])
-
-    return (
-        <div className="flex flex-col items-center justify-center h-screen">
-            Dashboard Page
-            <div>
-                The admin has the id : {userId}
+const Dashboard = () => {
+  return (
+    <>
+      <div className='flex main'>
+            <div className='w-[20%] sidebarWrapper'>
+                <SideBar />
             </div>
-        </div>
-    );
-}
+
+            {/* Internal Routes for Dashboard page */}
+            <section className=' w-[85%]'>
+                <Routes>
+                    <Route path="home" element={<AdminHome />} />
+                    <Route path="manage" element={<div>Manage</div>} />
+                    <Route path="bill" element={<div>bill</div>} />
+                </Routes>
+            </section>
+      </div>
+    </>
+  );
+};
+
+export default Dashboard;
