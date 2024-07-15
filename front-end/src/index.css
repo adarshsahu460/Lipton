@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+
+body {
+    background:  #f1f1f1;
+    font-family: "Open Sans", sans-serif;
+}
+
+.main .sidebarWrapper{
+    height: 100vh;
+    width: 15%;
+    background: white;
+}
+
+.main .sidebarWrapper .sidebar {
+    height: 100vh;
+    width: 15%;
+}
+
+.main .sidebarWrapper .sidebar .side-menu button{
+    justify-content: space-between !important ;
+    color : #222222;
+    font-size: 15px;
+    font-weight: 540;
+}
+
+.main .sidebarWrapper .sidebar .side-menu button svg{
+    font-size: 20px;
+}
+.main .sidebarWrapper .sidebar .side-menu svg{
+    font-size: 20px;
+}
