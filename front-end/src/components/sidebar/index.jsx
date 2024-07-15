@@ -24,9 +24,9 @@ function MenuItem(title, icon){
 export default function SideBar(){
     return <>
         <div className="sidebar fixed top-0 left-0 z-[100] h-full ">
-            <div className="border flex justify-center items-center py-2">
+            <div className=" flex justify-center items-center pt-2 pb-4">
                 <img src={Logo} alt="Logo Image" className="w-16" />
-                <div className="text-2xl font-bold pl-1 ">
+                <div className="text-2xl font-bold pl-1 pt-3">
                     LIFTEN
                 </div>
             </div>
