@@ -20,16 +20,19 @@ export function SignUp(){
 
     async function SignUpHelper (){
         try{
-            const res = await axios.post(`${import.meta.env.VITE_URL}/admin/register`, {
+            const res = await axios.post("http://localhost:3000/api/v1/admin/register", {
                 email : email,
                 password : password,
                 mobile : mobile,
                 name : name
             });
-            localStorage.setItem("canteen-token", res.data.token);
+            
+            // storing token into localstorage
+            localStorage.setItem("token", res.data.token);
             getAlert(1,"Signed up successfully");
         }catch(err){
-            getAlert(2,err.response.data.message);
+            console.log(err.response)
+            getAlert(2,err.response.data);
         }
     }
 
@@ -44,6 +47,7 @@ export function SignUp(){
                 <Button text={"Let's Go"}  onClick={()=>{
                     SignUpHelper();
                 }} />
+
                 <div className="flex justify-center mt-5 font-semibold text-sm text-gray-600">
                     <Link to={"/signin"}> Already have an Account? </Link>
                 </div>
