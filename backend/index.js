@@ -11,6 +11,9 @@ import bcrypt from 'bcrypt'
 import register from './actions/register.js'
 import { emailSchema, otpSchema, passwordSchema,nameSchema,phoneNumberSchema } from './validation/index.js'
 import cors from "cors";
+import payLater from './actions/payLater.js'
+import getPending from './actions/getPending.js'
+import payNow from './actions/payNow.js'
 
 const app = express()
 app.use(cors());
@@ -77,8 +80,12 @@ app.post(`${process.env.URL}/admin/register`, async (req, res) => {
     if(!mobSuccess) return res.status(400).json({message:"Please provide a valid phone number"})
 
 
-    const alreadyExist = await adminLogin(email,pass)
-    if(alreadyExist.status===200){
+    const alreadyExist = await prisma.admin.findUnique({
+        where: {
+            email
+        }
+    })
+    if(alreadyExist){
         return res.status(200).json({message:"Account already exist"})
     }
     
@@ -157,6 +164,23 @@ app.get(`${process.env.URL}/admin/getItems`,async(req,res)=>{
     res.json(items)
 })
 
+app.post(`${process.env.URL}/admin/payLater`,async(req,res)=>{
+    const pending = req.body.pending
+    const response = await payLater(pending)
+    return res.status(response.status).json(response.message)
+})
+
+app.get(`${process.env.URL}/admin/getPending`,async(req,res)=>{
+    const userId = req.query.userId
+    const response = await getPending(userId)
+    return res.status(response.status).json(response.message)
+})
+
+app.post(`${process.env.URL}/admin/payNow`,async(req,res)=>{
+    const userId = req.body.userId
+    const response = await payNow(userId)
+    return res.status(response.status).json(response.message)
+})
 // User ---------------------------------------------------------------------------------------------------------------
 
 app.get(`${process.env.URL}/user/login`, async (req, res) => {

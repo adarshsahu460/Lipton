@@ -26,9 +26,10 @@ export function SignUp(){
                 mobile : mobile,
                 name : name
             });
-            
-            // storing token into localstorage
-            localStorage.setItem("token", res.data.token);
+            if(res.data.message){
+                return getAlert(2,res.data.message)
+            }
+            localStorage.setItem("lipton-token", res.data.token);
             getAlert(1,"Signed up successfully");
         }catch(err){
             console.log(err.response)
@@ -49,7 +50,7 @@ export function SignUp(){
                 }} />
 
                 <div className="flex justify-center mt-5 font-semibold text-sm text-gray-600">
-                    <Link to={"/signin"}> Already have an Account? </Link>
+                    <Link to={"/admin/signin"}> Already have an Account? </Link>
                 </div>
             </div>      
         </div>
