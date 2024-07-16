@@ -3,13 +3,16 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient()
 export default async function (pending){
-    const userMob = pending.mob;
+    const userMob = pending.mobile;
     const items = pending.items;
+    // console.log(items);
+
     const user = await prisma.user.findUnique({
         where:{
             mobile:userMob
         }
     })
+    
     if(!user){
         return {
             status:400,
@@ -41,6 +44,7 @@ export default async function (pending){
             },
         })
     });
+
     return {
         status:200,
         message:"Order placed successfully"

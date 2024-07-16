@@ -1,11 +1,10 @@
-import React from 'react';
+import axios from "axios";
+import { Alert } from "bootstrap";
+import { AlertBox } from "../../components/AlertBox";
 
-// Function to print the bill
 export function printBill(products, total) {
-  // Create a new window for the print content
   const printWindow = window.open('', '', 'width=800,height=600');
 
-  // Define the HTML content for the new window
   const printContent = `
     <html>
       <head>
@@ -69,7 +68,18 @@ export function printBill(products, total) {
     </html>
   `;
 
-  // Write the HTML content to the new window
   printWindow.document.write(printContent);
   printWindow.document.close();
+}
+
+
+export async function PendingBill(mobile, myProducts, totalAmt) {
+   const res = await axios.post("http://localhost:3000/api/v1/admin/payLater", {
+      pending : {
+          mobile : mobile,
+          items : myProducts
+      }
+   }); 
+
+  AlertBox(1, res.data);
 }

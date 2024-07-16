@@ -168,7 +168,7 @@ app.post(`${process.env.URL}/admin/payLater`,async(req,res)=>{
     const pending = req.body.pending
     const response = await payLater(pending)
     return res.status(response.status).json(response.message)
-})
+}) 
 
 app.get(`${process.env.URL}/admin/getPending`,async(req,res)=>{
     const userId = req.query.userId

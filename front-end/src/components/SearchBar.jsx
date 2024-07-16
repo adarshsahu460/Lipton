@@ -1,7 +1,13 @@
-
-export function SearchBar({update}){
-    return <div className=" m-2 ">
-        <input type="text" className="border border-black mx-1 w-[85%] rounded-md p-1" onChange={update} />
-        <button className="border border-black mx-1 w-[10%] rounded-md p-1 bg-blue-400" >Find</button>
-    </div>
-}
+export function SearchBar({ update }) {
+    return (
+      <div className="flex items-center rounded-lg shadow-md">
+        <input
+          placeholder="Search Items Here"
+          type="text"
+          className="flex-1 rounded-lg p-3 border border-gray-300 focus:outline-none focus:border-blue-500 transition duration-200 text-base"
+          onChange={update}
+        />
+      </div>
+    );
+  }
+  
