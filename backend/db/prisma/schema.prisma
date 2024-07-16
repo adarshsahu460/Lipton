@@ -26,12 +26,13 @@ model Admin {
 
 model MenuItems{
   id          Int      @id @default(autoincrement())
-  name        String
+  name        String   
   price       Int
-  description String
-  image       String
-  category    String
+  description String    @default("a")
+  image       String    @default("a")
+  category    String    @default("a")
   adminId     Int       // foreign key
+  @@unique([adminId, name])
   admin       Admin     @relation(fields: [adminId], references: [id])
   orders      Order[]
 }
