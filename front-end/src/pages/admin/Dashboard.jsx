@@ -18,7 +18,7 @@ const Dashboard = () => {
               <div className='header'>
                     <AdminHeader />
               </div>
-              <div className=' w-[100%] mt-3 p-4 border border-black'>
+              <div className=' w-[100%] mt-3 p-3'>
                   <Routes>
                       <Route path="home" element={<AdminHome />} />
                       <Route path="manage" element={<div>Manage</div>} />
