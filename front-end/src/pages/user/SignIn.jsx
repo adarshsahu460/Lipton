@@ -14,19 +14,21 @@ export function SignIn(){
     const navigation = useNavigate();
 
     useEffect(()=>{
-        axios.get("http://localhost:3000/api/v1/admin/login",{withCredentials:true}).then(()=>{navigation('/admin/dashboard')}).catch((e)=>{})
+        axios.get("http://localhost:3000/api/v1/user/login",{withCredentials:true}).then(()=>{
+            navigation('/user/dashboard')
+        }).catch((e)=>{})
     },[])
 
-    async function SignInHelper (){
+    async function SignInHelper (){ 
         try{
-            const res = await axios.post("http://localhost:3000/api/v1/admin/login", {
+            const res = await axios.post("http://localhost:3000/api/v1/user/login", {
                 email : email,
                 password : password
             },{
                 withCredentials:true
             });            
             AlertBox(1,"Login Successfull");
-            navigation('/admin/dashboard')
+            navigation('/user/dashboard')
         }catch(err){
             AlertBox(2,err.response.data.message);
         }
@@ -41,9 +43,11 @@ export function SignIn(){
                 <Button text={"Let's Go"}  onClick={()=>{
                     SignInHelper();
                 }} />
-
-                <div className="flex justify-center mt-4 font-semibold text-sm text-gray-600">
-                    <Link to={"/admin/signup"}> Don't have an Account? </Link>
+                <div className="flex justify-center mt-4 mb-3 font-semibold text-sm text-gray-600">
+                    <Link to={"/user/forgot"}> Forgot Password </Link>
+                </div>
+                <div className="flex justify-center font-semibold text-sm text-gray-600">
+                    <Link to={"/user/signup"}> Don't have an Account? </Link>
                 </div>
             </div>      
         </div>

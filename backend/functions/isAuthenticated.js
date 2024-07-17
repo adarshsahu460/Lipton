@@ -29,6 +29,7 @@ export async function isAdminAuthenticated(req,res,next){
         if(!isMatch){
             return res.status(401).json({message:"Unauthorized"})
         }
+        req.adminId = admin.id
         next()
     }catch(err){
         return res.status(401).json({message:"Unauthorized"})
@@ -58,6 +59,7 @@ export async function isUserAuthenticated(req,res,next){
         if(!isMatch){
             return res.status(401).json({message:"Unauthorized"})
         }
+        req.body.userId = user.id
         next()
     }catch(err){
         return res.status(401).json({message:"Unauthorized"})
