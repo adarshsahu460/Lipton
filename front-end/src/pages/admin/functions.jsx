@@ -74,11 +74,12 @@ export function printBill(products, total) {
 
 
 export async function PendingBill(mobile, myProducts, totalAmt) {
-   const res = await axios.post("http://localhost:3000/api/v1/admin/payLater", {
+   const res = await axios.post("http://localhost:3000/api/v1/admin/payLater",{
       pending : {
           mobile : mobile,
           items : myProducts
-      }
+      },
+      withCredentials: true,
    }); 
 
   AlertBox(1, res.data);
