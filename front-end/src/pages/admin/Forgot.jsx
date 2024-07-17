@@ -20,7 +20,6 @@ export function Forgot(){
             if(password == "" || (password != cpassword)){
                 AlertBox(2,"Please enter the password again"); return;
             }
-
             const res = await axios.post("http://localhost:3000/api/v1/admin/verify", {
                 email : email,
                 otp : otp
@@ -46,7 +45,6 @@ export function Forgot(){
         }catch(e){
             AlertBox(2,err.response.data.message)
         }
-
     }
 
     return (

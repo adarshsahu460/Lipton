@@ -14,14 +14,7 @@ export function SignIn(){
     const navigation = useNavigate();
 
     useEffect(()=>{
-        const token = localStorage.getItem("lipton-token");
-        if(token){
-            axios.get("http://localhost:3000/api/v1/admin/login",{
-                headers:{
-                    Authorization:token
-                }
-            }).then(()=>{navigation('/admin/dashboard')}).catch((e)=>{})
-        }
+        axios.get("http://localhost:3000/api/v1/admin/login",{withCredentials:true}).then(()=>{navigation('/admin/dashboard')}).catch((e)=>{})
     },[])
 
     async function SignInHelper (){
@@ -29,12 +22,13 @@ export function SignIn(){
             const res = await axios.post("http://localhost:3000/api/v1/admin/login", {
                 email : email,
                 password : password
+            },{
+                withCredentials:true
             });            
-            localStorage.setItem("lipton-token", res.data.token);
             AlertBox(1,"Login Successfull");
             navigation('/admin/dashboard')
         }catch(err){
-            AlertBox(2,err.response.data);
+            AlertBox(2,err.response.data.message);
         }
     }
 

@@ -29,11 +29,9 @@ export function SignUp(){
             if(res.data.message){
                 return getAlert(2,res.data.message)
             }
-            localStorage.setItem("lipton-token", res.data.token);
             getAlert(1,"Signed up successfully");
         }catch(err){
-            console.log(err.response)
-            getAlert(2,err.response.data);
+            getAlert(2,err.response.data.message);
         }
     }
 
