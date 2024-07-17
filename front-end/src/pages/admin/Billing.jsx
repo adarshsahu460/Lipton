@@ -19,7 +19,6 @@ export function Billing() {
     }
     fetchData();
   }, [filter]);
-
   return (
     <div className="flex h-[600px]">
       <div className="w-3/5 bg-white border border-gray-300 m-2 p-6 rounded-lg shadow-lg">
