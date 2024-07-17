@@ -4,6 +4,7 @@ import AdminHome from './AdminHome';
 import SideBar from "../../components/sidebar/index.jsx"
 import {AdminHeader} from "../../components/AdminHeader.jsx"
 import {Billing} from "./Billing.jsx"
+import { Users } from './Users.jsx';
 
 const Dashboard = () => {
   return (
@@ -23,6 +24,7 @@ const Dashboard = () => {
                       <Route path="home" element={<AdminHome />} />
                       <Route path="manage" element={<div>Manage</div>} />
                       <Route path="bill" element={<Billing />} />
+                      <Route path="users" element={<Users />} />
                   </Routes>
               </div>
             </div>

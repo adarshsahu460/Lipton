@@ -13,6 +13,7 @@ export function SignUp(){
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [mobile, setMobile] = useState("");
+    const navigation = useNavigate();
 
     function getAlert(type,msg){
         AlertBox(type,msg);
@@ -30,6 +31,7 @@ export function SignUp(){
                 return getAlert(2,res.data.message)
             }
             getAlert(1,"Signed up successfully");
+            navigation('/admin/signin')
         }catch(err){
             getAlert(2,err.response.data.message);
         }

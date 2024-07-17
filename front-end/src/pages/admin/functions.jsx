@@ -79,8 +79,8 @@ export async function PendingBill(mobile, myProducts, totalAmt) {
           mobile : mobile,
           items : myProducts
       },
+    },{
       withCredentials: true,
-   }); 
-
-  AlertBox(1, res.data);
+    }); 
+  AlertBox(1, res.data.message);
 }

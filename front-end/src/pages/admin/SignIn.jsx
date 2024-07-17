@@ -14,7 +14,9 @@ export function SignIn(){
     const navigation = useNavigate();
 
     useEffect(()=>{
-        axios.get("http://localhost:3000/api/v1/admin/login",{withCredentials:true}).then(()=>{navigation('/admin/dashboard')}).catch((e)=>{})
+        axios.get("http://localhost:3000/api/v1/admin/login",{withCredentials:true}).then(()=>{navigation('/admin/dashboard')}).catch((e)=>{
+            AlertBox(2,e)
+        })
     },[])
 
     async function SignInHelper (){

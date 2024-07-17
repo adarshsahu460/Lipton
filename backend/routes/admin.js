@@ -193,6 +193,7 @@ app.get(`/getItems`, async (req, res) => {
     res.json(items)
 })
 
+
 app.post(`/payLater`, async (req, res) => {
     const pending = req.body.pending
     const response = await payLater(pending)
@@ -200,9 +201,9 @@ app.post(`/payLater`, async (req, res) => {
 })
 
 app.get(`/getPending`, async (req, res) => {
-    const userId = req.query.userId
-    const response = await getPending(userId)
-    return res.status(response.status).json({ message: response.message })
+    const str = req.query.str
+    const response = await getPending(str)
+    return res.json(response)
 })
 
 app.get('/getAllPending', async (req, res) => {
@@ -211,8 +212,9 @@ app.get('/getAllPending', async (req, res) => {
 })
 
 app.post(`/payNow`, async (req, res) => {
-    const userId = req.body.userId
-    const response = await payNow(userId)
+    const {userId,amt} = req.body
+    if(!userId ||!amt) return res.status(400).json({ message: "Please fill all the fields" })
+    const response = await payNow(userId,Number(amt))
     return res.status(response.status).json({ message: response.message })
 })
 
