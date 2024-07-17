@@ -37,7 +37,7 @@ export function Users() {
   }, [filter]);
   return (
     <div className="flex h-[600px]">
-      <div className="w-3/5 bg-white border border-gray-300 m-2 p-6 rounded-lg shadow-lg">
+      <div className="w-screen bg-white border border-gray-300 m-2 p-6 rounded-lg shadow-lg">
         <div className="flex items-center justify-center font-bold text-2xl mb-6">
           Search for Users
         </div>

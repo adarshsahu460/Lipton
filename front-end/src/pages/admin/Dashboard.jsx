@@ -22,7 +22,7 @@ const Dashboard = () => {
               </div>
               <div className=' w-[100%] mt-3 p-3'>
                   <Routes>
-                      <Route path="home" element={<AdminHome />} />
+                      {/* <Route path="home" element={<AdminHome />} /> */}
                       <Route path="manage" element={<ManageProducts />} />
                       <Route path="bill" element={<Billing />} />
                       <Route path="users" element={<Users />} />

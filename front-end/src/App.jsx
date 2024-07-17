@@ -3,6 +3,9 @@ import { SignUp as AdminSignUp } from './pages/admin/SignUp';
 import { SignIn as AdminSignIn } from './pages/admin/SignIn';
 import { Forgot as AdminForgot } from './pages/admin/Forgot';
 import  Dashboard  from './pages/admin/Dashboard.jsx';
+import { AlertBox } from './components/AlertBox';
+import Home  from './pages/Home.jsx';
+
 
 import { SignUp as UserSignUp } from './pages/user/SignUp';
 import { SignIn as UserSignIn } from './pages/user/SignIn';
@@ -14,6 +17,7 @@ function App() {
       <>
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<Home />}
             <Route path="/admin/signup" element={<AdminSignUp />} />
             <Route path="/admin/signin" element={<AdminSignIn />} />
             <Route path="/admin/forgot" element={<AdminForgot />} />
