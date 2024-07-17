@@ -14,8 +14,8 @@ export function SignIn(){
     const navigation = useNavigate();
 
     useEffect(()=>{
-        axios.get("http://localhost:3000/api/v1/admin/login",{withCredentials:true}).then(()=>{navigation('/admin/dashboard')}).catch((e)=>{
-            AlertBox(2,e)
+        axios.get("http://localhost:3000/api/v1/admin/login",{withCredentials:true}).then(()=>{navigation('/admin/dashboard/bill')}).catch((e)=>{
+            
         })
     },[])
 
@@ -28,7 +28,7 @@ export function SignIn(){
                 withCredentials:true
             });            
             AlertBox(1,"Login Successfull");
-            navigation('/admin/dashboard')
+            navigation('/admin/dashboard/bill')
         }catch(err){
             AlertBox(2,err.response.data.message);
         }
@@ -46,6 +46,9 @@ export function SignIn(){
 
                 <div className="flex justify-center mt-5 font-semibold text-sm text-gray-600">
                     <Link to={"/admin/signup"}> Don't have an Account? </Link>
+                </div>
+                <div className="flex justify-center mt-5 font-semibold text-sm text-gray-600">
+                    <Link to={"/admin/forgot"}> Forgot Password </Link>
                 </div>
             </div>      
         </div>

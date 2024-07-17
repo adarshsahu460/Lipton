@@ -69,7 +69,7 @@ export function Forgot(){
                 }} />
 
                 <div className="flex justify-center mt-5 font-semibold text-sm text-gray-600">
-                    <Link to={"admin/signin"}> Go To Login </Link>
+                    <Link to={"/admin/signin"}> Go To Login </Link>
                 </div>
             </div>      
         </div>

@@ -13,8 +13,8 @@ app.use(cors({
 app.use(express.json())
 dotenv.config();
 
-app.use(`${process.env.URL}/admin`,adminRouter)
-app.use(`${process.env.URL}/user`,userRouter)
+app.use(`${process.env.URL}/admin`, adminRouter)
+app.use(`${process.env.URL}/user`, userRouter)
 app.get('*',(req,res)=>{
     return res.json({
         message:"PAGE NOT FOUND"

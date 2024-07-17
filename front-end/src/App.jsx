@@ -4,12 +4,14 @@ import { SignIn } from './pages/admin/SignIn';
 import { Forgot } from './pages/admin/Forgot';
 import  Dashboard  from './pages/admin/Dashboard.jsx';
 import { AlertBox } from './components/AlertBox';
+import Home  from './pages/Home.jsx';
 
 function App() {  
   return (
       <>
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<Home />} />
             <Route path="/admin/signup" element={<SignUp />} />
             <Route path="/admin/signin" element={<SignIn />} />
             <Route path="/admin/forgot" element={<Forgot />} />

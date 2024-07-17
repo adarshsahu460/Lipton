@@ -3,7 +3,7 @@ import {Heading} from "../../components/Heading.jsx"
 import {Button} from "../../components/Button.jsx"
 import {InputBox} from "../../components/InputBox.jsx"
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {AlertBox} from "../../components/AlertBox.jsx"
 

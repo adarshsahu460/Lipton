@@ -35,7 +35,7 @@ export default function SideBar(){
                     LIFTEN
                 </div>
             </div>
-            {MenuItem("DashBoard", <MdOutlineDashboard />, "home" )}
+            {/* {MenuItem("DashBoard", <MdOutlineDashboard />, "home" )} */}
             {MenuItem("Products", <MdProductionQuantityLimits />, "manage" )}
             {MenuItem("Billing", <MdProductionQuantityLimits />, "bill" )}
             {MenuItem("Users", <MdProductionQuantityLimits />, "users" )}
