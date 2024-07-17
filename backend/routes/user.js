@@ -7,11 +7,22 @@ import { userVerify } from '../actions/verify.js'
 import bcrypt from 'bcrypt'
 import register from '../actions/register.js'
 import { emailSchema, otpSchema, passwordSchema,nameSchema,phoneNumberSchema } from '../validation/index.js'
+import cookieParser from 'cookie-parser'
+import { isUserAuthenticated } from '../functions/isAuthenticated.js'
+import { PrismaClient } from '@prisma/client'
+import cors from 'cors'
 
+const prisma = new PrismaClient()
 const app = express.Router()
+app.use(cookieParser())
+app.use(cors({
+    origin:'http://localhost:5173',
+    credentials:true
+}));
 
 app.get(`/login`, async (req, res) => {
-    const auth = req.headers.authorization
+    const auth = req.cookies['lipton-cookie-user']
+    if(!auth) return res.status(400).json({message:"Invalid token"})
     var email = "" , password = ""
     jwt.verify(auth, process.env.SECRET_KEY,function(err,decoded){
         if(err || !decoded || !decoded.email || !decoded.password){
@@ -25,10 +36,10 @@ app.get(`/login`, async (req, res) => {
     }
     const result = await userLogin(email,password)
     if(!result.id){
-        res.status(result.status).json(result.message)
+        res.status(result.status).json({message:result.message})
         return
     }
-    return res.status(result.status).json(result.id)
+    return res.status(result.status).json({message:result.id})
 })
 
 app.post(`/login`,async (req, res) => {
@@ -42,13 +53,18 @@ app.post(`/login`,async (req, res) => {
     if(!passSuccess) return res.status(400).json({message:"Password must be at least 8 characters and maximum 16 characters"})
 
     const response = await userLogin(email,password)
-    if(response.status == 400) return res.status(response.status).json(response.message);
+    if(response.status == 400) return res.status(response.status).json({message:response.message});
     
     const token = jwt.sign({email,password},process.env.SECRET_KEY)
-    return res.status(response.status).json({token})
+    return res.status(response.status).cookie("lipton-cookie-user",token,{
+        maxAge:1000*60*60*24*30,
+        httpOnly:true,
+        sameSite:"none",
+        secure:true
+    }).json({message:response.message})
 })
 
-app.post(`forgot`, async (req, res) => {
+app.post(`/forgot`, async (req, res) => {
     const email = req.body.email
     if(!email) return res.status(400).json({message:"Please provide a email"})
     
@@ -56,7 +72,7 @@ app.post(`forgot`, async (req, res) => {
     if(!emailSuccess) return res.status(400).json({message:"Please provide a valid email"})
 
     const response = await userForgot(email)
-    return res.status(response.status).json(response.message)
+    return res.status(response.status).json({message:response.message})
 })
 
 app.post(`/verify`, async (req, res) => {
@@ -77,7 +93,7 @@ app.post(`/verify`, async (req, res) => {
     })
     const id = user.id
     const response = await userVerify(id,otp)
-    return res.status(response.status).json(response.message)
+    return res.status(response.status).json({message:response.message})
 })
 
 app.put(`/updatePass`,async (req,res) =>{
@@ -97,8 +113,13 @@ app.put(`/updatePass`,async (req,res) =>{
     },process.env.SECRET_KEY)
     const hash = await bcrypt.hash(pass,10)
     const response = await userUpdatePass(hash,email)
-    if(response.status==500) res.status(response.status).json(response.message)
-    else res.status(response.status).json({token})
+    if(response.status==500) res.status(response.status).json({message:response.message})
+    else res.status(response.status).cookie("lipton-cookie-user",token,{
+        maxAge:1000*60*60*24*30,
+        httpOnly:true,
+        sameSite:"none",
+        secure:true
+    }).json({message:response.message})
 })
 
 app.post(`/register`, async (req, res) => {
@@ -123,9 +144,20 @@ app.post(`/register`, async (req, res) => {
     },process.env.SECRET_KEY)
     const hash = await bcrypt.hash(pass,10)
     const response = await register(email,hash,false,name,mob)
-    if(response.status==400) res.status(response.status).json(response.message)
-    else res.status(response.status).json({token})
+    if(response.status==400) res.status(response.status).json({message:response.message})
+    else res.status(response.status).cookie("lipton-cookie-user",token,{
+        maxAge:1000*60*60*24*30,
+        httpOnly:true,
+        sameSite:"none",
+        secure:true
+    }).json({message:response.message})
 })
 
+
+app.use(isUserAuthenticated)
+app.get('/logout',async (req,res) => {
+    res.clearCookie("lipton-cookie-user")
+    return res.status(200).json({message:"Logged out successfully"})
+})
 
 export default app
