@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { response } from 'express'
 import {  userLogin } from '../actions/login.js'
 import { userForgot } from '../actions/forgot.js'
 import {  userUpdatePass } from '../actions/updatePass.js'
@@ -11,6 +11,7 @@ import cookieParser from 'cookie-parser'
 import { isUserAuthenticated } from '../functions/isAuthenticated.js'
 import { PrismaClient } from '@prisma/client'
 import cors from 'cors'
+import getUserDetails from '../functions/getUserDetails.js'
 
 const prisma = new PrismaClient()
 const app = express.Router()
@@ -158,6 +159,11 @@ app.use(isUserAuthenticated)
 app.get('/logout',async (req,res) => {
     res.clearCookie("lipton-cookie-user")
     return res.status(200).json({message:"Logged out successfully"})
+})
+app.get('/dashboard',async (req,res) => {
+    const {userId} = req.body
+    const response = await getUserDetails(userId)
+    return res.status(response.status).json({message:response.message})
 })
 
 export default app

@@ -29,8 +29,6 @@
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.24.1",
     "react-toastify": "^10.0.5",
-    "react-youtube-background": "^1.0.0",
-    "three": "^0.166.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
