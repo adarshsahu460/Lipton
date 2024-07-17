@@ -2,12 +2,17 @@ import React from "react"
 import Logo from "../../assets/images/logo.png"
 import Button from '@mui/material/Button';
 import { MdOutlineDashboard, MdProductionQuantityLimits, MdKeyboardArrowRight } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 
-function MenuItem(title, icon){
+function MenuItem(title, icon, link){
+    const navigate = useNavigate();
+
     return (
         <div className="side-menu py-1 pl-3 flex items-center">
-            <Button className="w-100 items-center"> 
+            <Button className="w-100 items-center" onClick={() => {
+                navigate(link);
+            }}> 
                 <div className="flex items-center">
                     <span className="icon w-[30px] h-[30px] flex items-center justify-center rounded-md "> {icon}  </span>
                     {title} 
@@ -30,10 +35,10 @@ export default function SideBar(){
                     LIFTEN
                 </div>
             </div>
-            {MenuItem("DashBoard", <MdOutlineDashboard />, )}
-            {MenuItem("Products", <MdProductionQuantityLimits />, )}
-            {MenuItem("Billing", <MdProductionQuantityLimits />, )}
-            {MenuItem("Users", <MdProductionQuantityLimits />, )}
+            {MenuItem("DashBoard", <MdOutlineDashboard />, "home" )}
+            {MenuItem("Products", <MdProductionQuantityLimits />, "manage" )}
+            {MenuItem("Billing", <MdProductionQuantityLimits />, "bill" )}
+            {MenuItem("Users", <MdProductionQuantityLimits />, "users" )}
         </div>
     </>
 }
