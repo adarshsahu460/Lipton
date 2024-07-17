@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient()
-export default async function(userId){
-    const user = await prisma.user.findUnique({
+export default async function(userId,amt){
+    let user = await prisma.user.findUnique({
         where:{
             id:Number(userId)
         },
@@ -16,23 +16,28 @@ export default async function(userId){
             message:"User not found"
         }
     }
-    user.orders.forEach(async(order) => {
-        await prisma.order.delete({
-            where:{
-                id:Number(order.id)
-            }
-        })
-    })
-    await prisma.user.update({
+    user = await prisma.user.update({
         where:{
             id:Number(userId)
         },
         data:{
             balance:{
-                decrement:user.balance
+                decrement:amt
             }
+        },
+        include:{
+            orders:true
         }
     })
+    if(user.balance==0){
+        user.orders.forEach(async(order) => {
+            await prisma.order.delete({
+                where:{
+                    id:Number(order.id)
+                }
+            })
+        })
+    }
 
     return {
         status:200,
