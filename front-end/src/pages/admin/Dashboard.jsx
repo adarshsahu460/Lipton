@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import AdminHome from './AdminHome';
+import ManageProducts from './ManageProducts.jsx';
 import SideBar from "../../components/sidebar/index.jsx"
 import {AdminHeader} from "../../components/AdminHeader.jsx"
 import {Billing} from "./Billing.jsx"
@@ -21,7 +22,7 @@ const Dashboard = () => {
               <div className=' w-[100%] mt-3 p-3'>
                   <Routes>
                       <Route path="home" element={<AdminHome />} />
-                      <Route path="manage" element={<div>Manage</div>} />
+                      <Route path="manage" element={<ManageProducts />} />
                       <Route path="bill" element={<Billing />} />
                   </Routes>
               </div>
