@@ -13,7 +13,9 @@ export function Billing() {
   useEffect(() => {
     async function fetchData() {
       const res = await axios.get(
-        "http://localhost:3000/api/v1/admin/getItems?str=" + filter
+        "http://localhost:3000/api/v1/admin/getItems?str=" + filter,{
+          withCredentials: true,  
+        }
       );
       setProductList(res.data);
     }
