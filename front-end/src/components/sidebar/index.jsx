@@ -1,44 +1,41 @@
-import React from "react"
-import Logo from "../../assets/images/logo.png"
+import React from "react";
+import Logo from "../../assets/images/logo.png";
 import Button from '@mui/material/Button';
 import { MdOutlineDashboard, MdProductionQuantityLimits, MdKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
-
-function MenuItem(title, icon, link){
+function MenuItem({ title, icon, link }) {
     const navigate = useNavigate();
 
     return (
-        <div className="side-menu py-1 pl-3 flex items-center">
-            <Button className="w-100 items-center" onClick={() => {
-                navigate(link);
-            }}> 
-                <div className="flex items-center">
-                    <span className="icon w-[30px] h-[30px] flex items-center justify-center rounded-md "> {icon}  </span>
-                    {title} 
-                </div>
-                <div className="w-[30px] h-[30px] flex pt-1">
-                    <MdKeyboardArrowRight />
-                </div>
-            </Button>
-           
-        </div>
+        <Button
+            className="menu-item flex items-center p-3 mb-2 rounded-lg hover:bg-gray-100 text-gray-800 transition-colors duration-300"
+            onClick={() => navigate(link)}
+        >
+            <span className="icon w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 mr-4">
+                {icon}
+            </span>
+            <span className="text-md font-medium">{title}</span>
+            <MdKeyboardArrowRight className="ml-auto text-gray-400" />
+        </Button>
     );
 }
 
-export default function SideBar(){
-    return <>
-        <div className="sidebar fixed top-0 left-0 z-[100] h-full ">
-            <div className=" flex justify-center items-center pt-2 pb-4">
-                <img src={Logo} alt="Logo Image" className="w-16" />
-                <div className="text-2xl font-bold pl-1 pt-3">
-                    LIFTEN
-                </div>
+export default function SideBar() {
+    return (
+        <div className="sidebar fixed top-0 left-0 z-50 h-full w-64 bg-white shadow-md border-r border-gray-300">
+            <div className="flex items-center p-4 border-b border-gray-300">
+                <img src={Logo} alt="Logo" className="w-12 h-12" />
+                <div className="text-xl font-semibold ml-3 text-gray-900">LIFTEN</div>
             </div>
-            {/* {MenuItem("DashBoard", <MdOutlineDashboard />, "home" )} */}
-            {MenuItem("Products", <MdProductionQuantityLimits />, "manage" )}
-            {MenuItem("Billing", <MdProductionQuantityLimits />, "bill" )}
-            {MenuItem("Users", <MdProductionQuantityLimits />, "users" )}
+            <div className="flex flex-col p-4 space-y-2">
+                {/* Uncomment this line if you want to use the Dashboard menu item */}
+                {/* <MenuItem title="Dashboard" icon={<MdOutlineDashboard />} link="home" /> */}
+                <MenuItem title="Home" icon={<MdProductionQuantityLimits />} link="" />
+                <MenuItem title="Products" icon={<MdProductionQuantityLimits />} link="manage" />
+                <MenuItem title="Billing" icon={<MdProductionQuantityLimits />} link="bill" />
+                <MenuItem title="Users" icon={<MdProductionQuantityLimits />} link="users" />
+            </div>
         </div>
-    </>
+    );
 }

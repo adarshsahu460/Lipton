@@ -26,6 +26,7 @@ const Dashboard = () => {
                       <Route path="manage" element={<ManageProducts />} />
                       <Route path="bill" element={<Billing />} />
                       <Route path="users" element={<Users />} />
+                      <Route path="/" element={<AdminHome />} />
                   </Routes>
               </div>
             </div>
