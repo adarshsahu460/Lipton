@@ -33,7 +33,7 @@ export async function addMenuitem(name,price,adminId){
         await prisma.menuItems.create({
             data:{
                 name,
-                price : Number(price),
+                price,
                 adminId: Number(adminId)
             }
         })
