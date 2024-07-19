@@ -75,3 +75,11 @@ model AdminOTP{
   admin     Admin    @relation(fields: [adminID], references: [id])
   createdAt DateTime @default(now())
 }
+
+model Pending{
+  id        Int       @id @default(autoincrement())
+  name      String
+  mobile    String
+  email     String   @unique
+  password  String
+}

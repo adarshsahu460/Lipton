@@ -4,17 +4,17 @@ const prisma = new PrismaClient()
 export default async function(email,pass,admin,name,mob){
     if(admin){
         try{
-            await prisma.admin.create({
+            await prisma.pending.create({
                 data:{
                     password:pass,
-                    email : email,
-                    name : name,
-                    mobile : mob
+                    name,
+                    email,
+                    mobile:mob
                 }
             })
             return {
                 status:200,
-                message:"Admin created"
+                message:"Verification process has started"
             }
         }catch(e){
             return {
