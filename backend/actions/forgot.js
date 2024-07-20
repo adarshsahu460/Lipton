@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import emailGenerator from "../functions/email-generator.js";
 import otpGenerator from "../functions/otp-generator.js";
 
-const prisma = new PrismaClient()
+export const prisma = new PrismaClient()
 export async function userForgot(email){
     const otp = await otpGenerator()
     const user = await prisma.user.findUnique({

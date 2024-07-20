@@ -1,11 +1,11 @@
 import { PrismaClient } from "@prisma/client";
+import { addProfit } from "./profit.js";
 
 
 const prisma = new PrismaClient()
 export default async function (pending){
     const userMob = pending.mobile;
     const items = pending.items;
-    // console.log(items);
 
     const user = await prisma.user.findUnique({
         where:{
@@ -19,6 +19,7 @@ export default async function (pending){
             message:"User not found"
         }
     }
+    let profit = 0;
     const userId = user.id;
     items.forEach(async(item) => {
         await prisma.order.create({
@@ -43,8 +44,9 @@ export default async function (pending){
                 }
             },
         })
+        profit += Number(menuItem.price)*Number(item.qty);
     });
-
+    await addProfit(profit, new Date());
     return {
         status:200,
         message:"Order placed successfully"

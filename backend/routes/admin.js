@@ -7,22 +7,22 @@ import jwt from 'jsonwebtoken'
 import { adminVerify } from '../actions/verify.js'
 import bcrypt from 'bcrypt'
 import register from '../actions/register.js'
-import { emailSchema, otpSchema, passwordSchema, nameSchema, phoneNumberSchema,numberStringSchema } from '../validation/index.js'
+import { emailSchema, otpSchema, passwordSchema, nameSchema, phoneNumberSchema,numberStringSchema } from '../functions/validation.js'
 import payLater from '../actions/payLater.js'
-import getPending from '../actions/getPending.js'
+import {getPending, getAllPending} from '../actions/pending.js'
 import payNow from '../actions/payNow.js'
 import { isAdminAuthenticated } from '../functions/isAuthenticated.js'
-import getAllPending from '../actions/getAllPending.js'
 import cookieParser from 'cookie-parser'
 import { PrismaClient } from '@prisma/client'
 import cors from 'cors'
+import { addProfit, getProfit } from '../actions/profit.js'
 
 
 const app = express.Router()
 app.use(cookieParser())
 const prisma = new PrismaClient()
 app.use(cors({
-    origin:'http://localhost:5174',
+    origin:'http://localhost:5173',
     credentials:true
 }));
 
@@ -54,12 +54,12 @@ app.post(`/login`, async (req, res) => {
 
     if (!email || !password) return res.status(400).json({ message: "Please fill all the fields" })
 
-    // zod validation for email and password
     const { success: emailSuccess } = emailSchema.safeParse(email)
     if (!emailSuccess) return res.status(400).json({ message: "Please provide a valid email" })
     const { success: passwordSuccess } = passwordSchema.safeParse(password)
     if (!passwordSuccess) return res.status(400).json({ message: "Password must be at least 8 characters and maximum 16 characters" })
 
+    
     const response = await adminLogin(email, password)
     if (response.status == 400) return res.status(response.status).json({ message: response.message });
     const token = jwt.sign({ email, password }, process.env.SECRET_KEY)
@@ -120,7 +120,7 @@ app.post(`/forgot`, async (req, res) => {
     if (!email) {
         return res.status(400).json({ message: "Please provide a email" })
     }
-    // zod validation for email
+
     const { success: emailSuccess } = emailSchema.safeParse(email)
     if (!emailSuccess) return res.status(400).json({ message: "Please provide a valid email" })
 
@@ -129,26 +129,23 @@ app.post(`/forgot`, async (req, res) => {
 })
 
 app.post(`/verify`, async (req, res) => {
-    const otp = req.body.otp
+    const {otp,email} = req.body
     // zod validation for otp
     if (!otp) {
         return res.status(400).json({ message: "Please provide a otp" })
     }
+
     const { success: otpSuccess } = otpSchema.safeParse(otp)
     if (!otpSuccess) return res.status(400).json({ message: "Please provide a valid otp" })
-
-    const email = req.body.email
-    // zod validation for email
     const { success: emailSuccess } = emailSchema.safeParse(email)
     if (!emailSuccess) return res.status(400).json({ message: "Please provide a valid email" })
-
+    
     const user = await prisma.admin.findUnique({
         where: {
             email
         }
     })
-    const id = user.id
-    const response = await adminVerify(id, otp)
+    const response = await adminVerify(user.id, otp)
     return res.status(response.status).json({ message: response.message })
 })
 
@@ -157,7 +154,7 @@ app.put(`/updatePass`, async (req, res) => {
     const pass = req.body.password
 
     if (!email || !pass) return res.status(400).json({ message: "Please fill all the fields" })
-    // zod validation for email and password
+
     const { success: emailSuccess } = emailSchema.safeParse(email)
     if (!emailSuccess) return res.status(400).json({ message: "Please provide a valid email" })
     const { success: passSuccess } = passwordSchema.safeParse(pass)
@@ -188,12 +185,16 @@ app.get(`/logout`, async (req, res) => {
 
 app.get(`/getItems`, async (req, res) => {
     const str = req.query.str
-    const items = await searchMenuItem(str)
+    const items = await searchMenuItem(str,req.body.adminId)
     res.json(items)
 })
 
 app.post(`/payLater`, async (req, res) => {
     const pending = req.body.pending
+
+    const { success: mobileSuccess } = phoneNumberSchema.safeParse(pending.mobile)
+    if(mobileSuccess) return res.status(400).json({ message: "Please provide a valid phone number" })
+
     const response = await payLater(pending)
     return res.status(response.status).json({ message: response.message })
 })
@@ -212,6 +213,10 @@ app.get('/getAllPending', async (req, res) => {
 app.post(`/payNow`, async (req, res) => {
     const {userId,amt} = req.body
     if(!userId ||!amt) return res.status(400).json({ message: "Please fill all the fields" })
+
+    const {success:numberSuccess} = numberStringSchema.safeParse(amt)
+    if(!numberSuccess) return res.status(400).json({ message: "Please provide a valid amount" })
+    
     const response = await payNow(userId,Number(amt))
     return res.status(response.status).json({ message: response.message })
 })
@@ -228,6 +233,9 @@ app.post('/addItem', async (req, res) => {
 app.put('/updateItem', async (req, res) => {
     const { id, name, price } = req.body
     if (!name || !price || !id) return res.status(400).json({ message: "Please fill all the fields" })
+    const {success:numberSuccess} = numberStringSchema.safeParse(price)
+    if(!numberSuccess) return res.status(400).json({ message: "Please provide a valid price" })
+    
     const response = await updateMenuitem(id, name, price)
     return res.status(response.status).json({ message: response.message })
 })
@@ -236,6 +244,22 @@ app.post('/deleteItem', async (req, res) => {
     const { id } = req.body
     if (!id) return res.status(400).json({ message: "Please fill all the fields" })
     const response = await deleteMenuitem(id)
+    return res.status(response.status).json({ message: response.message })
+})
+
+app.post('/addProfit', async (req, res) => {
+    const { profit } = req.body
+    if (!profit) return res.status(400).json({ message: "Please fill all the fields" })
+
+    const {success:numberSuccess} = numberStringSchema.safeParse(profit)
+    if(!numberSuccess) return res.status(400).json({ message: "Please provide a valid profit" })
+    
+    const response = await addProfit(Number(profit), new Date().setHours(0,0,0,0))
+    return res.status(response.status).json({ message: response.message })
+})
+
+app.get('/getProfit', async (req, res) => {
+    const response = await getProfit(new Date().setHours(0,0,0,0))
     return res.status(response.status).json({ message: response.message })
 })
 

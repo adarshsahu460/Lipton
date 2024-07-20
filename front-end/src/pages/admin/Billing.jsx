@@ -51,6 +51,14 @@ export function Billing() {
     }
   };
 
+  const addProfit = async()=>{
+    await axios.post('http://localhost:3000/api/v1/admin/addProfit',{
+        profit:totalAmt
+    },{
+      withCredentials:true
+    })
+  }
+
   return (
     <div className="flex h-[600px] bg-gradient-to-br from-blue-50 to-purple-100 p-4">
       <div className="w-3/5 bg-white border border-gray-200 m-2 p-6 rounded-xl shadow-2xl transform transition duration-500 hover:scale-105">
@@ -125,6 +133,7 @@ export function Billing() {
                 className="bg-green-600 text-white px-4 py-2 ml-4 rounded-lg shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105"
                 onClick={() => {
                   printBill(myProducts, totalAmt);
+                  addProfit()
                 }}
               >
                 Print
