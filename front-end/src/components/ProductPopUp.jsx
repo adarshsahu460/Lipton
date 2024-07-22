@@ -23,7 +23,6 @@ const AddProductPopup = ({ isOpen, onClose, product, isUpdate }) => {
     const res = await axios.post("http://localhost:3000/api/v1/admin/addItem", {
         name : productName,
         price : productPrice,
-        adminId : 9
     }, {
         withCredentials : true
     });

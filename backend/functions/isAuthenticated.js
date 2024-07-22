@@ -29,7 +29,7 @@ export async function isAdminAuthenticated(req,res,next){
         if(!isMatch){
             return res.status(401).json({message:"Unauthorized"})
         }
-        req.adminId = admin.id
+        req.body.adminId = admin.id
         next()
     }catch(err){
         return res.status(401).json({message:"Unauthorized"})

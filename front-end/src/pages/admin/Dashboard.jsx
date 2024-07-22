@@ -10,6 +10,7 @@ import axios from 'axios';
 
 const Dashboard = () => {
   const navigate = useNavigate()
+
   useEffect(()=>{
     axios.get("http://localhost:3000/api/v1/admin/dashboard",{withCredentials:true}).catch(e=>{navigate("/admin/signin")})
   },[]);
@@ -19,15 +20,12 @@ const Dashboard = () => {
             <div className='w-[20%] sidebarWrapper'>
                 <SideBar />
             </div>
-
-            {/* Internal Routes for Dashboard page */}
             <div className='flex flex-col w-[85%]'>
               <div className='header'>
                     <AdminHeader />
               </div>
               <div className=' w-[100%] mt-3 p-3'>
                   <Routes>
-                      {/* <Route path="home" element={<AdminHome />} /> */}
                       <Route path="manage" element={<ManageProducts />} />
                       <Route path="bill" element={<Billing />} />
                       <Route path="users" element={<Users />} />

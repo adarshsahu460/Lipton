@@ -83,3 +83,9 @@ model Pending{
   email     String   @unique
   password  String
 }
+
+model Profit{
+  id      Int      @id @default(autoincrement())
+  profit  Int      
+  date    DateTime @default(now())  @unique
+}

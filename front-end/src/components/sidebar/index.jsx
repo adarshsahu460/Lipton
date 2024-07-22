@@ -1,6 +1,6 @@
 import React from "react";
 import Logo from "../../assets/images/logo.png";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 import { MdOutlineDashboard, MdProductionQuantityLimits, MdKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 

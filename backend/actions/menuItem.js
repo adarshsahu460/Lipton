@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
-export async function searchMenuItem(str) {
+export async function searchMenuItem(str,adminId) {
     const items = await prisma.menuItems.findMany({
         where:{
             OR:[
@@ -17,7 +17,8 @@ export async function searchMenuItem(str) {
                         mode: "insensitive"
                     }
                 }
-            ]
+            ],
+            adminId:Number(adminId)
         },select:{
             id:true,
             name:true,

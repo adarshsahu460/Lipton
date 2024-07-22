@@ -1,7 +1,9 @@
+import dotenv from 'dotenv'
+import { prisma } from '../actions/forgot.js'
 
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+dotenv.config({
+  path: '../.env'
+})
 
 async function login() {
   await prisma.user.deleteMany()
@@ -10,4 +12,10 @@ async function login() {
   await prisma.userOTP.deleteMany()
 }
 
-login()
+// login()
+
+async function addDate(pr,date) {
+  
+}
+
+addDate(100,new Date())
