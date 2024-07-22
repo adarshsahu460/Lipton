@@ -6,7 +6,6 @@ import  Dashboard  from './pages/admin/Dashboard.jsx';
 import { AlertBox } from './components/AlertBox';
 import Home  from './pages/Home.jsx';
 
-
 import { SignUp as UserSignUp } from './pages/user/SignUp';
 import { SignIn as UserSignIn } from './pages/user/SignIn';
 import { Forgot as UserForgot } from './pages/user/Forgot';

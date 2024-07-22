@@ -15,6 +15,7 @@ import { isAdminAuthenticated } from '../functions/isAuthenticated.js'
 import cookieParser from 'cookie-parser'
 import { PrismaClient } from '@prisma/client'
 import cors from 'cors'
+import getStats from '../actions/getStats.js'
 import { addProfit, getProfit } from '../actions/profit.js'
 
 
@@ -208,6 +209,22 @@ app.get(`/getPending`, async (req, res) => {
 app.get('/getAllPending', async (req, res) => {
     const response = await getAllPending()
     return res.status(response.status).json({ message: response.message })
+})
+
+app.get('/getStats', async (req, res) => {
+    const auth = req.cookies['lipton-cookie-admin']
+    if (!auth) return res.status(400).json({ message: "Invalid token" })
+    var email = "", password = ""
+    jwt.verify(auth, process.env.SECRET_KEY, function (err, decoded) {
+        if (err || !decoded || !decoded.email || !decoded.password) {
+            return
+        }
+        email = decoded.email
+        password = decoded.password
+    })
+
+    const response = await getStats(email);
+    return res.status(response.status).json({message : response.message});
 })
 
 app.post(`/payNow`, async (req, res) => {
