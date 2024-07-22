@@ -33,7 +33,7 @@ export async function addMenuitem(name,price,adminId){
         await prisma.menuItems.create({
             data:{
                 name,
-                price : Number(price),
+                price,
                 adminId: Number(adminId)
             }
         })
@@ -53,7 +53,7 @@ export async function deleteMenuitem(id){
     try{
         await prisma.menuItems.delete({
             where:{
-                id : Number(id)
+                id
             }
         })
         return {
@@ -63,7 +63,7 @@ export async function deleteMenuitem(id){
     }catch(e){
         return {
             status:500,
-            message:"Something went wrong"
+            message:e
         }
     }
 }

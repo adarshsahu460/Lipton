@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 dotenv.config();
 
 
-export default async function (email, otp) {
+export default async function (email, message) {
     try{
         const transporter = nodemailer.createTransport({
             service:'gmail',
@@ -16,14 +16,14 @@ export default async function (email, otp) {
             },
         });
         // console.log(process.env.EMAIL_ID+""+process.env.EMAIL_PASSWORD)
-        const info = await transporter.sendMail({
+        const info = transporter.sendMail({
             from:{
                 name: "Walchand College Canteen",
                 address: process.env.EMAIL_ID
             },
             to: email, 
             subject: "This is the email regarding your OTP verification", 
-            text: otp
+            text: message
         });
         return true
     }catch(e){

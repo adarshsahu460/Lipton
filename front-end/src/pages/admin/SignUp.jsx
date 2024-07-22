@@ -27,11 +27,12 @@ export function SignUp(){
                 mobile : mobile,
                 name : name
             });
-            if(res.data.message){
-                return getAlert(2,res.data.message)
+            const msg = res.data.message
+            if(msg=="Account verification is still pending"){
+                getAlert(2,msg)
+            }else{
+                getAlert(1,msg)
             }
-            getAlert(1,"Signed up successfully");
-            navigation('/admin/signin')
         }catch(err){
             getAlert(2,err.response.data.message);
         }

@@ -35,7 +35,7 @@ model MenuItems{
   @@unique([adminId, name])
   admin       Admin     @relation(fields: [adminId], references: [id])
   orders      Order[]
-}
+} 
 
 model Order{
   id        Int      @id @default(autoincrement())
@@ -74,4 +74,12 @@ model AdminOTP{
   adminID   Int      @unique
   admin     Admin    @relation(fields: [adminID], references: [id])
   createdAt DateTime @default(now())
+}
+
+model Pending{
+  id        Int       @id @default(autoincrement())
+  name      String
+  mobile    String
+  email     String   @unique
+  password  String
 }

@@ -33,6 +33,8 @@ export default function ManageProducts() {
     };
     
     async function removeItem(product){
+        try{
+            console.log(product.id)
             const res = await axios.post("http://localhost:3000/api/v1/admin/deleteItem", {
                 id : product.id
             }, {
@@ -44,8 +46,9 @@ export default function ManageProducts() {
             }else{
                 AlertBox(2, "Something Went Wrong");
             }
-
-            console.log("Remove");
+        }catch(error){
+            console.error(error);
+        }
     }
 
     useEffect(() => {

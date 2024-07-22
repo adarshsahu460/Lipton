@@ -1,13 +1,18 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import AdminHome from './AdminHome';
 import ManageProducts from './ManageProducts.jsx';
 import SideBar from "../../components/sidebar/index.jsx"
 import {AdminHeader} from "../../components/AdminHeader.jsx"
 import {Billing} from "./Billing.jsx"
 import { Users } from './Users.jsx';
+import axios from 'axios';
 
 const Dashboard = () => {
+  const navigate = useNavigate()
+  useEffect(()=>{
+    axios.get("http://localhost:3000/api/v1/admin/dashboard",{withCredentials:true}).catch(e=>{navigate("/admin/signin")})
+  },[]);
   return (
     <>
       <div className='flex main'>

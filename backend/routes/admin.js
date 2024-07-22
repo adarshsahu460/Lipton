@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken'
 import { adminVerify } from '../actions/verify.js'
 import bcrypt from 'bcrypt'
 import register from '../actions/register.js'
-import { emailSchema, otpSchema, passwordSchema, nameSchema, phoneNumberSchema } from '../validation/index.js'
+import { emailSchema, otpSchema, passwordSchema, nameSchema, phoneNumberSchema,numberStringSchema } from '../validation/index.js'
 import payLater from '../actions/payLater.js'
 import getPending from '../actions/getPending.js'
 import payNow from '../actions/payNow.js'
@@ -101,20 +101,19 @@ app.post(`/register`, async (req, res) => {
         return res.status(200).json({ message: "Account already exist" })
     }
 
-    const token = jwt.sign({
-        email,
-        password: pass
-    }, process.env.SECRET_KEY)
+    const stillPending = await prisma.pending.findUnique({
+        where: {
+            email
+        }
+    })
+    if(stillPending) {
+        return res.status(200).json({ message: "Account verification is still pending" })
+    }
 
     const hash = await bcrypt.hash(pass, 10)
     const response = await register(email, hash, true, name, mob)
     if (response.status == 400) return res.status(response.status).json({ message: response.message });
-    else return res.status(response.status).cookie("lipton-cookie-admin", token, {
-        maxAge: 1000 * 60 * 60 * 24 * 30,
-        httpOnly: true,
-        sameSite: "none",
-        secure: true
-    }).json({ message: response.message })
+    return res.status(response.status).json({ message: response.message })
 })
 
 app.post(`/forgot`, async (req, res) => {
@@ -194,7 +193,6 @@ app.get(`/getItems`, async (req, res) => {
     res.json(items)
 })
 
-
 app.post(`/payLater`, async (req, res) => {
     const pending = req.body.pending
     const response = await payLater(pending)
@@ -238,7 +236,9 @@ app.post(`/payNow`, async (req, res) => {
 app.post('/addItem', async (req, res) => {
     const { name, price, adminId } = req.body
     if (!name || !price || !adminId) return res.status(400).json({ message: "Please fill all the fields" })
-    const response = await addMenuitem(name, price, adminId)
+    const {success:numberSuccess} = numberStringSchema.safeParse(price)
+    if(!numberSuccess) return res.status(400).json({ message: "Please provide a valid price" })
+    const response = await addMenuitem(name, Number(price) , adminId)
     return res.status(response.status).json({ message: response.message })
 })
 
