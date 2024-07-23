@@ -43,7 +43,7 @@ export function SignIn(){
                 <InputBox label={"Password"}placeholder={"Enter password"} type={"password"} onClick={(e)=> { setPassword(e.target.value) }} />
                 <Button text={"Let's Go"}  onClick={()=>{
                     SignInHelper();
-                }} />
+                } }/>
 
                 <div className="flex justify-center mt-4 font-semibold text-sm text-gray-600">
                     <Link to={"/admin/signup"}> Don't have an Account? </Link>

@@ -52,12 +52,13 @@ export function Billing() {
   useEffect(() => {
     window.addEventListener("keydown", handleKeyPress);
     return () => {
-      window.removeEventListener("keydown", handleKeyPress);
+      // window.removeEventListener("keydown", handleKeyPress);
     };
   }, []);
   
 
   const addToCart = (product) => {
+    console.log(product);
     setMyProducts((prevProducts) => {
       const existingProductIndex = prevProducts.findIndex((p) => p.id === product.id);
       if (existingProductIndex !== -1) {
