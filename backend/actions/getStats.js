@@ -1,11 +1,13 @@
 import {  PrismaClient } from "@prisma/client"
+import { getAllPending } from "./pending.js";
+import { getProfit } from "./profit.js";
 
 const prisma = new PrismaClient();
 
-async function getAdmin(email){
+async function getAdmin(adminId){
     const user = await prisma.admin.findUnique({
         where : {
-            email : email
+            id : adminId
         }, 
         select : {
             email : true,
@@ -18,32 +20,32 @@ async function getAdmin(email){
     return user;
 }
 
-export default async function (email) {
-    const users = await prisma.user.findMany();
+export default async function (adminId) {
     
-    const adminDetail = await getAdmin(email);
-    // console.log(adminDetail);
-
-    if(!users){
+    const adminDetail = await getAdmin(adminId);
+    let users = await getAllPending()
+    if(users.status == 400){
         return {
             status : 200,
             message : {
                 pending : 0,
-                admin : adminDetail
+                admin : adminDetail,
+                profit : 0
             }
         }
     }
-
-    // console.log(users);
+    users = users.message;
     let total = 0;
     users.map((u) => {
         total = total + u.balance    
     })
+    const profit = (await getProfit(new Date())).message
     return {
         status : 200,
         message : {
             pending : total,
-            admin : adminDetail
+            admin : adminDetail,
+            profit
         }
     }
 }

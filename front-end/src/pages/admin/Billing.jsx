@@ -1,76 +1,75 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { SearchBar } from "../../components/SearchBar";
 import { printBill, PendingBill } from "./functions.jsx";
+import { ScaleLoader } from "react-spinners";
 
 export function Billing() {
+  const override = {
+    display: "block",
+    margin: "0 auto",
+    borderColor: "red",
+  };  
   const [productList, setProductList] = useState([]);
-  const [productWithKey, setProductWithKey] = useState([]);
   const [filter, setFilter] = useState("");
+  const [color, setColor] = useState("#ffffff");
+
   const [myProducts, setMyProducts] = useState([]);
   const [totalAmt, setTotalAmt] = useState(0);
   const [mobile, setMobile] = useState("");
-  const [dummy, setDum] = useState(0);
+  const keyMapping = useMemo(()=>{
+    return new Map()
+  })
+  const [loading, setLoading] = useState(false);
+
+  async function fetchData() {
+    setLoading(true)
+    const res = await axios.get(
+      "http://localhost:3000/api/v1/admin/getItems?str=" + filter, {
+        withCredentials: true,
+      }
+    );
+    const items = res.data
+    setProductList(items);
+    items.map((item) => {
+      keyMapping.set(item.key,item)
+    })
+    setLoading(false)
+  }
+  const handleKeyPress = async (event) => {
+    if(event.shiftKey){
+      const product = keyMapping.get(event.key)
+      if(product){
+        addToCart(product)
+      }
+    }
+  };
 
   useEffect(() => {
-    async function fetchData() {
-      const res = await axios.get(
-        "http://localhost:3000/api/v1/admin/getItems?str=" + filter, {
-          withCredentials: true,
-        }
-      );
-      setProductWithKey(res.data);
-      console.log(productWithKey);
-    }
     fetchData();
-  }, [dummy]);
-
-  useEffect(() => {
-    async function fetchData() {
-      const res = await axios.get(
-        "http://localhost:3000/api/v1/admin/getItems?str=" + filter, {
-          withCredentials: true,
-        }
-      );
-      setProductList(res.data);
-    }
-    fetchData();
-
   }, [filter]);
-  
-  useEffect(() => {
-    const handleKeyPress = async (event) => {
-      console.log(productWithKey);
-      
-      if (event.shiftKey && event.key === 'M') {
-        
-      }
-      if (event.shiftKey && event.key === 'L') {
-        
-      }
-    };
 
-    // window.addEventListener('keydown', handleKeyPress);
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
   }, []);
   
 
   const addToCart = (product) => {
-    console.log('product.id :>> ', product.id);
-    console.log('myProdcuts :>> ', myProducts);
-    const existingProductIndex = myProducts.findIndex((p) => p.id === product.id);
-    console.log(myProducts[existingProductIndex]);
-    console.log(existingProductIndex);
-    console.log(product);
-
-    if (existingProductIndex !== -1) {
-      const updatedProducts = [...myProducts];
-      updatedProducts[existingProductIndex].qty += 1;
-      setMyProducts(updatedProducts);
-    } else {
-      const newProduct = { ...product, qty: 1 };
-      setMyProducts([...myProducts, newProduct]);
-    }
-    setTotalAmt(totalAmt + product.price);
+    setMyProducts((prevProducts) => {
+      const existingProductIndex = prevProducts.findIndex((p) => p.id === product.id);
+      if (existingProductIndex !== -1) {
+        const updatedProducts = [...prevProducts];
+        updatedProducts[existingProductIndex].qty += 1;
+        return updatedProducts;
+      } else {
+        const newProduct = { ...product, qty: 1 };
+        return [...prevProducts, newProduct];
+      }
+    });
+    setTotalAmt((prevTotal) => prevTotal + product.price);
   };
 
   const removeFromCart = (product) => {
@@ -89,11 +88,13 @@ export function Billing() {
   };
 
   const addProfit = async()=>{
+    setLoading(true)
     await axios.post('http://localhost:3000/api/v1/admin/addProfit',{
         profit:totalAmt
     },{
       withCredentials:true
     })
+    setLoading(false)
   }
 
   return (
@@ -101,14 +102,17 @@ export function Billing() {
       <div className="w-3/5 bg-white border border-gray-200 m-2 p-6 rounded-xl shadow-2xl transform transition duration-500 hover:scale-100">
         <div className="flex items-center justify-center font-bold text-3xl text-purple-700 mb-6 animate-pulse">
           Select Products
-        </div>
+        </div>  
         <SearchBar
           update={(e) => {
             setFilter(e.target.value);
           }}
         />
         <div className="mt-6 max-h-[400px] overflow-y-auto">
-          {productList.map((product, index) => (
+          { loading ? <div className="flex flex-row justify-center items-center h-max">  
+              <ScaleLoader/>
+            </div> : 
+          productList.map((product, index) => (
             <div
               key={product.id}
               className="flex bg-green-50 items-center m-2 p-3 rounded-lg justify-between shadow-md hover:bg-green-100 transition duration-300 transform hover:-translate-y-1"

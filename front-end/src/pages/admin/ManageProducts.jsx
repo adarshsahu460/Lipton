@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 
 import AddProductPopup from "../../components/ProductPopUp";
 import { AlertBox } from "../../components/AlertBox";
-
+import { ScaleLoader } from "react-spinners";
 export default function ManageProducts() {
     const [productList, setProductList] = useState([]);
     const [isPopupOpen, setIsPopupOpen] = useState(false);    
     const [isUpdate, setIsUpdate] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState({
         id: 0,
         name: "",
@@ -36,7 +37,7 @@ export default function ManageProducts() {
     
     async function removeItem(product){
         try{
-            console.log(product.id)
+            setLoading(true)
             const res = await axios.post("http://localhost:3000/api/v1/admin/deleteItem", {
                 id : product.id
             }, {
@@ -48,20 +49,25 @@ export default function ManageProducts() {
             }else{
                 AlertBox(2, "Something Went Wrong");
             }
+            setLoading(false)
         }catch(error){
             console.error(error);
+            setLoading(false)
         }
     }
 
     useEffect(() => {
         async function fetchData() {
             try {
+                setLoading(true);
                 const res = await axios.get("http://localhost:3000/api/v1/admin/getItems?str=", {
                     withCredentials: true,
                 });
                 setProductList(res.data);
+                setLoading(false);
             } catch (error) {
                 console.error("Error fetching product list:", error);
+                setLoading(false);
             }
         }
         fetchData();
@@ -76,7 +82,10 @@ export default function ManageProducts() {
                 </button>
             </div>
             <div className="bg-white p-4 rounded-lg shadow-lg">
-                {productList.map((product, index) => (
+                { loading?  <div className="flex flex-row justify-center items-center h-max">  
+                    <ScaleLoader/>
+                </div> :
+                 productList.map((product, index) => (
                     <div
                         key={product.id}
                         className="flex items-center justify-between p-3 mb-2 bg-green-50 rounded-lg shadow-md hover:bg-green-100 transition duration-200"

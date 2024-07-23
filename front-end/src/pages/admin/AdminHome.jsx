@@ -1,29 +1,31 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { FaUserCircle, FaEnvelope, FaPhone, FaMoneyBillWave, FaDollarSign } from 'react-icons/fa';
+import {ClipLoader} from "react-spinners";
 
 const AdminHome = () => {
   const [adminData, setAdminData] = useState({});
   const [pendingAmt, setPendingAmt] = useState(0);
-  const [profitAmt, setProfitAmt] = useState(500); // Uncomment this line once the API provides the profit data
-
+  const [profitAmt, setProfitAmt] = useState(0); // Uncomment this line once the API provides the profit data
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     async function getData() {
+      setLoading(true)
       const res = await axios.get("http://localhost:3000/api/v1/admin/getStats", {
         withCredentials: true,
       });
-
       setAdminData(res.data.message.admin);
       setPendingAmt(res.data.message.pending);
-      // setProfitAmt(res.data.message.profit); // Uncomment when API provides profit data
+      setProfitAmt(res.data.message.profit); 
+      setLoading(false)
     }
     getData();
   }, []);
 
-  return (
+  return <>
+    { loading ? <ClipLoader/> :
     <div className="bg-gray-100 min-h-screen p-6 flex flex-col items-center">
       
-      {/* Admin Information Section */}
       <div className="w-full max-w-5xl bg-white rounded-xl shadow-lg overflow-hidden">
         
         <div className="p-6 bg-gradient-to-r from-blue-500 to-blue-400 flex items-center">
@@ -96,7 +98,8 @@ const AdminHome = () => {
         </div>
       </div>
     </div>
-  );
+  }
+  </>
 };
 
 export default AdminHome;

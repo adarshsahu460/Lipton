@@ -22,6 +22,7 @@ model Admin {
   password  String
   menuItems MenuItems[]
   adminOTP  AdminOTP[]
+  verified  Boolean  @default(false)
 }
 
 model MenuItems{
@@ -75,14 +76,6 @@ model AdminOTP{
   adminID   Int      @unique
   admin     Admin    @relation(fields: [adminID], references: [id])
   createdAt DateTime @default(now())
-}
-
-model Pending{
-  id        Int       @id @default(autoincrement())
-  name      String
-  mobile    String
-  email     String   @unique
-  password  String
 }
 
 model Profit{

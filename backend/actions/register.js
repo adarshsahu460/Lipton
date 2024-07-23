@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 export default async function(email,pass,admin,name,mob){
     if(admin){
         try{
-            await prisma.pending.create({
+            await prisma.admin.create({
                 data:{
                     password:pass,
                     name,
