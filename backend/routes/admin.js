@@ -8,9 +8,8 @@ import { adminVerify } from '../actions/verify.js'
 import bcrypt from 'bcrypt'
 import register from '../actions/register.js'
 import { emailSchema, otpSchema, passwordSchema, nameSchema, phoneNumberSchema,numberStringSchema } from '../functions/validation.js'
-import payLater from '../actions/payLater.js'
+import {payLater,payNow} from '../actions/pay.js'
 import {getPending, getAllPending} from '../actions/pending.js'
-import payNow from '../actions/payNow.js'
 import { isAdminAuthenticated } from '../functions/isAuthenticated.js'
 import cookieParser from 'cookie-parser'
 import { PrismaClient } from '@prisma/client'
@@ -117,16 +116,10 @@ app.post(`/register`, async (req, res) => {
         }
     })
     if (alreadyExist) {
-        return res.status(200).json({ message: "Account already exist" })
-    }
-
-    const stillPending = await prisma.pending.findUnique({
-        where: {
-            email
+        if(alreadyExist.verified) {
+            return res.status(400).json({ message: "Account already exists" })
         }
-    })
-    if(stillPending) {
-        return res.status(200).json({ message: "Account verification is still pending" })
+        else  return res.status(400).json({ message: "Account verification is still pending" })
     }
 
     const hash = await bcrypt.hash(pass, 10)
@@ -231,18 +224,8 @@ app.get('/getAllPending', async (req, res) => {
 })
 
 app.get('/getStats', async (req, res) => {
-    const auth = req.cookies['lipton-cookie-admin']
-    if (!auth) return res.status(400).json({ message: "Invalid token" })
-    var email = "", password = ""
-    jwt.verify(auth, process.env.SECRET_KEY, function (err, decoded) {
-        if (err || !decoded || !decoded.email || !decoded.password) {
-            return
-        }
-        email = decoded.email
-        password = decoded.password
-    })
-
-    const response = await getStats(email);
+    const {adminId} = req.body
+    const response = await getStats(adminId);
     return res.status(response.status).json({message : response.message});
 })
 
@@ -269,8 +252,8 @@ app.post('/addItem', async (req, res) => {
 app.put('/updateItem', async (req, res) => {
     const { id, name, price, key } = req.body
     if (!name || !price || !id) return res.status(400).json({ message: "Please fill all the fields" })
-    const {success:numberSuccess} = numberStringSchema.safeParse(price)
-    if(!numberSuccess) return res.status(400).json({ message: "Please provide a valid price" })
+    // const {success:numberSuccess} = numberStringSchema.safeParse(price)
+    // if(!numberSuccess) return res.status(400).json({ message: "Please provide a valid price" })
     
     const response = await updateMenuitem(id, name, price, key)
     return res.status(response.status).json({ message: response.message })
@@ -290,7 +273,7 @@ app.post('/addProfit', async (req, res) => {
     const {success:numberSuccess} = numberStringSchema.safeParse(profit)
     if(!numberSuccess) return res.status(400).json({ message: "Please provide a valid profit" })
     
-    const response = await addProfit(Number(profit), new Date().setHours(0,0,0,0))
+    const response = await addProfit(Number(profit), new Date())
     return res.status(response.status).json({ message: response.message })
 })
 

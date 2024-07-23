@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient()
 export async function getProfit(date){
+    date.setHours(0,0,0,0)
     let profit = await prisma.profit.findUnique({
         where:{
             date
@@ -22,6 +23,7 @@ export async function getProfit(date){
 }   
 
 export async function addProfit(profit,date){
+    date.setHours(0,0,0,0)
     await prisma.profit.upsert({
         where:{
             date

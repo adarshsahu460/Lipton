@@ -12,32 +12,31 @@ app.use(cors({
 }));
 
 app.get('/getAllPending',async (req,res)=>{
-    const pending = await prisma.pending.findMany()
+    const pending = await prisma.admin.findMany({
+        where:{
+            verified:false
+        }
+    })
     return res.status(200).json(pending)
-})  
+})
 
 app.post('/resolved',async (req,res)=>{
     const id = req.body.id
     const approve = req.body.approve
 
-    const admin = await prisma.pending.findUnique({
+    const admin = await prisma.admin.findUnique({
         where:{
             id:Number(id)
         }
     })
     if(!admin) return res.status(400).json({message:"Invalid id"})  
-    await prisma.pending.delete({
-        where:{
-            id:Number(id)
-        },
-    })
     if(approve == "1"){
-        await prisma.admin.create({
+        await prisma.admin.update({
+            where:{
+                id:Number(id)
+            },
             data:{
-                email:admin.email,
-                password:admin.password,
-                name:admin.name,
-                mobile:admin.mobile
+                verified:true
             }
         })
         return res.status(200).json({message:"Approved"})

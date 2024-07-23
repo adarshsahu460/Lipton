@@ -2,11 +2,17 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient()
 export async function getAllPending(){
-    const items = await prisma.order.findMany()
-    if(!items){
+    const items = await prisma.user.findMany({
+        where:{
+            balance:{
+                gt:0
+            }
+        }
+    })
+    if(items.length == 0){
         return {
             status:400,
-            message:"No items found"
+            message:"No pending users"
         }
     }
     return {
