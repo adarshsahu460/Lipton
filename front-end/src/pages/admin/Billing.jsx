@@ -5,10 +5,25 @@ import { printBill, PendingBill } from "./functions.jsx";
 
 export function Billing() {
   const [productList, setProductList] = useState([]);
+  const [productWithKey, setProductWithKey] = useState([]);
   const [filter, setFilter] = useState("");
   const [myProducts, setMyProducts] = useState([]);
   const [totalAmt, setTotalAmt] = useState(0);
   const [mobile, setMobile] = useState("");
+  const [dummy, setDum] = useState(0);
+
+  useEffect(() => {
+    async function fetchData() {
+      const res = await axios.get(
+        "http://localhost:3000/api/v1/admin/getItems?str=" + filter, {
+          withCredentials: true,
+        }
+      );
+      setProductWithKey(res.data);
+      console.log(productWithKey);
+    }
+    fetchData();
+  }, [dummy]);
 
   useEffect(() => {
     async function fetchData() {
@@ -20,10 +35,32 @@ export function Billing() {
       setProductList(res.data);
     }
     fetchData();
+
   }, [filter]);
+  
+  useEffect(() => {
+    const handleKeyPress = async (event) => {
+      console.log(productWithKey);
+      
+      if (event.shiftKey && event.key === 'M') {
+        
+      }
+      if (event.shiftKey && event.key === 'L') {
+        
+      }
+    };
+
+    // window.addEventListener('keydown', handleKeyPress);
+  }, []);
+  
 
   const addToCart = (product) => {
+    console.log('product.id :>> ', product.id);
+    console.log('myProdcuts :>> ', myProducts);
     const existingProductIndex = myProducts.findIndex((p) => p.id === product.id);
+    console.log(myProducts[existingProductIndex]);
+    console.log(existingProductIndex);
+    console.log(product);
 
     if (existingProductIndex !== -1) {
       const updatedProducts = [...myProducts];
@@ -61,7 +98,7 @@ export function Billing() {
 
   return (
     <div className="flex h-[600px] bg-gradient-to-br from-blue-50 to-purple-100 p-4">
-      <div className="w-3/5 bg-white border border-gray-200 m-2 p-6 rounded-xl shadow-2xl transform transition duration-500 hover:scale-105">
+      <div className="w-3/5 bg-white border border-gray-200 m-2 p-6 rounded-xl shadow-2xl transform transition duration-500 hover:scale-100">
         <div className="flex items-center justify-center font-bold text-3xl text-purple-700 mb-6 animate-pulse">
           Select Products
         </div>
@@ -80,7 +117,7 @@ export function Billing() {
               <div className="flex-1 ml-4">{product.name}</div>
               <div className="flex-1 text-right font-semibold">${product.price.toFixed(2)}</div>
               <button
-                className="bg-green-500 text-white px-4 py-2 rounded-lg ml-4 shadow-lg hover:bg-green-600 transition duration-300 transform hover:scale-105"
+                className="bg-green-500 text-white px-4 py-2 rounded-lg ml-4 shadow-lg hover:bg-green-600 transition duration-300 transform hover:scale-100"
                 onClick={() => addToCart(product)}
               >
                 Add
@@ -105,14 +142,14 @@ export function Billing() {
                 <div className="flex-1 text-right font-semibold">${product.price.toFixed(2)}</div>
                 <div className="flex items-center">
                   <button
-                    className="bg-red-500 text-white px-3 py-1 rounded-lg shadow-lg hover:bg-red-600 transition duration-300 transform hover:scale-105 ml-3"
+                    className="bg-red-500 text-white px-3 py-1 rounded-lg shadow-lg hover:bg-red-600 transition duration-300 transform hover:scale-100 ml-3"
                     onClick={() => removeFromCart(product)}
                   >
                     -
                   </button>
                   <div className="px-3">{product.qty}</div>
                   <button
-                    className="bg-green-500 text-white px-3 py-1 rounded-lg shadow-lg hover:bg-green-600 transition duration-300 transform hover:scale-105"
+                    className="bg-green-500 text-white px-3 py-1 rounded-lg shadow-lg hover:bg-green-600 transition duration-300 transform hover:scale-100"
                     onClick={() => addToCart(product)}
                   >
                     +
@@ -130,7 +167,7 @@ export function Billing() {
             </div>
             <div>
               <button
-                className="bg-green-600 text-white px-4 py-2 ml-4 rounded-lg shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105"
+                className="bg-green-600 text-white px-4 py-2 ml-4 rounded-lg shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-100"
                 onClick={() => {
                   printBill(myProducts, totalAmt);
                   addProfit()

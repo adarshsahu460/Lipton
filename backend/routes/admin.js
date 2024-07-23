@@ -239,21 +239,21 @@ app.post(`/payNow`, async (req, res) => {
 })
 
 app.post('/addItem', async (req, res) => {
-    const { name, price, adminId } = req.body
+    const { name, price, adminId, key } = req.body
     if (!name || !price || !adminId) return res.status(400).json({ message: "Please fill all the fields" })
     const {success:numberSuccess} = numberStringSchema.safeParse(price)
     if(!numberSuccess) return res.status(400).json({ message: "Please provide a valid price" })
-    const response = await addMenuitem(name, Number(price) , adminId)
+    const response = await addMenuitem(name, Number(price) , adminId, key)
     return res.status(response.status).json({ message: response.message })
 })
 
 app.put('/updateItem', async (req, res) => {
-    const { id, name, price } = req.body
+    const { id, name, price, key } = req.body
     if (!name || !price || !id) return res.status(400).json({ message: "Please fill all the fields" })
     const {success:numberSuccess} = numberStringSchema.safeParse(price)
     if(!numberSuccess) return res.status(400).json({ message: "Please provide a valid price" })
     
-    const response = await updateMenuitem(id, name, price)
+    const response = await updateMenuitem(id, name, price, key)
     return res.status(response.status).json({ message: response.message })
 })
 

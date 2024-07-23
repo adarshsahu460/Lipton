@@ -11,7 +11,8 @@ export default function ManageProducts() {
     const [selectedProduct, setSelectedProduct] = useState({
         id: 0,
         name: "",
-        price: 0
+        price: 0,
+        key : ""
     });
 
     const openPopup = () => {
@@ -24,6 +25,7 @@ export default function ManageProducts() {
     };
 
     const updateSelected = async (product) => {
+        console.log(product);
         await setSelectedProduct(product);
         setSelectedProduct((prevProduct) => {
             return product;
