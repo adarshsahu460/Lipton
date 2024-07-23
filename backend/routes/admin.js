@@ -189,7 +189,7 @@ app.put(`/updatePass`, async (req, res) => {
 })
 
 // All these are visible to only authenticated admins -----------------------------------------------------------
-app.use(isAdminAuthenticated)
+app.use(isAdminAuthenticated)   
 
 app.get(`/logout`, async (req, res) => {
     res.clearCookie("lipton-cookie-admin")
@@ -205,8 +205,8 @@ app.get(`/getItems`, async (req, res) => {
 app.post(`/payLater`, async (req, res) => {
     const pending = req.body.pending
 
-    const { success: mobileSuccess } = phoneNumberSchema.safeParse(pending.mobile)
-    if(mobileSuccess) return res.status(400).json({ message: "Please provide a valid phone number" })
+    // const { success: mobileSuccess } = phoneNumberSchema.safeParse(pending.mobile)
+    // if(mobileSuccess) return res.status(400).json({ message: "Please provide a valid phone number" })
 
     const response = await payLater(pending)
     return res.status(response.status).json({ message: response.message })
@@ -233,8 +233,8 @@ app.post(`/payNow`, async (req, res) => {
     const {userId,amt} = req.body
     if(!userId ||!amt) return res.status(400).json({ message: "Please fill all the fields" })
 
-    const {success:numberSuccess} = numberStringSchema.safeParse(amt)
-    if(!numberSuccess) return res.status(400).json({ message: "Please provide a valid amount" })
+    // const {success:numberSuccess} = numberStringSchema.safeParse(amt)
+    // if(!numberSuccess) return res.status(400).json({ message: "Please    provide a valid amount" })
     
     const response = await payNow(userId,Number(amt))
     return res.status(response.status).json({ message: response.message })

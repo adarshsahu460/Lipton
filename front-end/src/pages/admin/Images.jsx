@@ -1,5 +1,7 @@
 import axios from 'axios';
 import React, { useState, useRef } from 'react';
+import {storage} from '../../assets/config/firebase.js';
+import {ref,uploadBytes} from 'firebase/storage'
 
 export function Images() {
     const [file, setFile] = useState(null);
@@ -18,32 +20,20 @@ export function Images() {
     const handleTagChange = (event) => {
         setTag(event.target.value);
     };
-
+    const [img,setImg] = useState("");
     const handleUpload = async () => {
-        if (!file) {
-            alert("Please select a file to upload.");
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('billImage', file);
-        formData.append('tag', tag);
-
-        try {
-            console.log("Frontend " + tag);
-            const response = await axios.post('http://localhost:3000/api/v1/admin/uploadImage', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                },
-                withCredentials: true
-            });
-
-            console.log(response.data);
-            alert('File uploaded successfully');
-        } catch (error) {
-            console.error('Error:', error.response ? error.response.data : error.message);
-            alert('An error occurred while uploading the file.');
-        }
+        const date = new Date();
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); 
+        const year = date.getFullYear();
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        const formattedDateTime = `${day}-${month}-${year}_${hours}-${minutes}-${seconds}`;
+        const imgRef = ref(storage, `${tag} - ${formattedDateTime}.jpg`);
+        await uploadBytes(imgRef, img);
+        // URL
+        // Axios.post ()
     };
 
     return (
@@ -56,10 +46,9 @@ export function Images() {
                         <input 
                             type="file"  
                             name="billImage" 
-                            onChange={handleFileChange} 
+                            onChange={e=>{setImg(e.target.files[0])}} 
                         />
 
-                        {/* Tag Input */}
                         <div className="w-full max-w-md">
                             <label htmlFor="image-tag" className="block text-gray-700 font-medium mb-2">
                                 Image Tag
@@ -74,7 +63,6 @@ export function Images() {
                             />
                         </div>
                         
-                        {/* Upload Button */}
                         <button
                             onClick={handleUpload}
                             className="px-6 py-3 bg-gradient-to-r from-teal-400 to-teal-600 text-white rounded-lg shadow-lg hover:from-teal-500 hover:to-teal-700 transition duration-300 w-full max-w-md text-base font-medium"

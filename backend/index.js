@@ -13,7 +13,11 @@ app.use(cors({
 }));
 app.use(express.json())
 dotenv.config();
-
+app.get('/',(req,res)=>{
+    return res.json({
+        message:"Hello World"
+    })
+})
 app.use(`${process.env.URL}/admin`, adminRouter)
 app.use(`${process.env.URL}/user`, userRouter)
 app.use(`${process.env.URL}/dev`, devRouter)
@@ -23,6 +27,6 @@ app.get('*',(req,res)=>{
         message:"PAGE NOT FOUND"
     })
 })
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT,'0.0.0.0', () => {
     console.log(`Server is running on port ${process.env.PORT}`)
 })
