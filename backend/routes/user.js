@@ -9,11 +9,11 @@ import register from '../actions/register.js'
 import { emailSchema, otpSchema, passwordSchema,nameSchema,phoneNumberSchema } from '../functions/validation.js'
 import cookieParser from 'cookie-parser'
 import { isUserAuthenticated } from '../functions/isAuthenticated.js'
-import { PrismaClient } from '@prisma/client'
 import cors from 'cors'
 import getUserDetails from '../functions/getUserDetails.js'
+import { PrismaSingleton } from "../db/index.js";
 
-const prisma = new PrismaClient()
+const prisma = PrismaSingleton.getInstance()
 const app = express.Router()
 app.use(cookieParser())
 app.use(cors({

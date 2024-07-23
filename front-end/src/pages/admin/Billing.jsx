@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { SearchBar } from "../../components/SearchBar";
-import { printBill, PendingBill } from "./functions.jsx";
+import { printBill } from "./functions.jsx";
 import { ScaleLoader } from "react-spinners";
+import { AlertBox } from "../../components/AlertBox.jsx";
 
 export function Billing() {
   const override = {
@@ -97,7 +98,21 @@ export function Billing() {
     })
     setLoading(false)
   }
-
+  async function PendingBill(mobile, myProducts, totalAmt) {
+    try {
+      const res = await axios.post("http://localhost:3000/api/v1/admin/payLater",{
+        pending : {
+            mobile : mobile,
+            items : myProducts
+        },
+      },{
+        withCredentials: true,
+      }); 
+      AlertBox(1, res.data.message);
+    }catch (error) {
+      AlertBox(2, error.response.data.message);
+    }
+  }
   return (
     <div className="flex h-[600px] bg-gradient-to-br from-blue-50 to-purple-100 p-4">
       <div className="w-3/5 bg-white border border-gray-200 m-2 p-6 rounded-xl shadow-2xl transform transition duration-500 hover:scale-100">

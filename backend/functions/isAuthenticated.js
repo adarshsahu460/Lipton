@@ -1,12 +1,13 @@
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import { PrismaClient } from '@prisma/client'
 
 dotenv.config({
     path: '../.env'
 })
-const prisma = new PrismaClient()
+import { PrismaSingleton } from "../db/index.js";
+
+const prisma = PrismaSingleton.getInstance()
 export async function isAdminAuthenticated(req,res,next){
     const token = req.cookies['lipton-cookie-admin']
     if(!token){

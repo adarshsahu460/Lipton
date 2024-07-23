@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client"
+import { PrismaSingleton } from "../db/index.js";
 
-const prisma = new PrismaClient()
+const prisma = PrismaSingleton.getInstance()
 export async function searchMenuItem(str,adminId) {
     const items = await prisma.menuItems.findMany({
         where:{
