@@ -7,6 +7,7 @@ import {AdminHeader} from "../../components/AdminHeader.jsx"
 import {Billing} from "./Billing.jsx"
 import { Users } from './Users.jsx';
 import axios from 'axios';
+import { Images } from './Images.jsx';
 
 const Dashboard = () => {
   const navigate = useNavigate()
@@ -26,10 +27,11 @@ const Dashboard = () => {
               </div>
               <div className=' w-[100%] mt-3 p-3'>
                   <Routes>
+                      <Route path="/" element={<AdminHome />} />
                       <Route path="manage" element={<ManageProducts />} />
                       <Route path="bill" element={<Billing />} />
                       <Route path="users" element={<Users />} />
-                      <Route path="/" element={<AdminHome />} />
+                      <Route path="/gallery" element={<Images />} />
                   </Routes>
               </div>
             </div>

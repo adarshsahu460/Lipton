@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { urlencoded } from 'express'
 import { adminLogin } from '../actions/login.js'
 import { adminForgot } from '../actions/forgot.js'
 import { adminUpdatePass } from '../actions/updatePass.js'
@@ -16,11 +16,30 @@ import { PrismaClient } from '@prisma/client'
 import cors from 'cors'
 import getStats from '../actions/getStats.js'
 import { addProfit, getProfit } from '../actions/profit.js'
+import multer from 'multer'
+import { Prisma } from '@prisma/client'
+
+// new added code
+const storage = multer.diskStorage({
+    destination : (req, file, cb) => {
+        cb(null, "./uploads");
+    },
+    filename :  function(req, file, cb){
+        return cb(null, `${Date.now()}-${file.originalname}`, req.body.tag);
+    }
+});
+
+const upload = multer({storage : storage});
+const prisma = new PrismaClient();
+
+
+// code ends here
 
 
 const app = express.Router()
 app.use(cookieParser())
-const prisma = new PrismaClient()
+app.use(urlencoded({extended : false}));
+
 app.use(cors({
     origin:'http://localhost:5173',
     credentials:true
@@ -262,5 +281,24 @@ app.get('/getProfit', async (req, res) => {
     const response = await getProfit(new Date().setHours(0,0,0,0))
     return res.status(response.status).json({ message: response.message })
 })
+
+app.post('/uploadImage', upload.single('billImage'), async (req, res) => {
+    
+    if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const fileUrl = `./uploads/${req.file.filename}`;
+    const tag = req.body.tag;
+
+    const galleryEntry = await prisma.gallery.create({
+        data: {
+            url: fileUrl,
+            tag : tag, 
+        },
+    });
+
+    return res.status(200).json({ message: 'File uploaded successfully', data: galleryEntry });
+});
 
 export default app
