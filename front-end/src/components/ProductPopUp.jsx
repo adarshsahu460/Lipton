@@ -5,24 +5,28 @@ import { AlertBox } from "./AlertBox";
 const AddProductPopup = ({ isOpen, onClose, product, isUpdate }) => {
   const [productName, setProductName] = useState("");
   const [productPrice, setProductPrice] = useState("");
+  const [key, setKey] = useState("");
 
 //   console.log(productName);
     useEffect(() => {
         if(isUpdate){
             setProductName(product.name);
             setProductPrice(product.price);
+            setKey(product.key);
         }else{
             setProductName("");
             setProductPrice("");
+            setKey("");
         }
     }, [product, isUpdate])
 
   const handleAddProduct = async () => {
-    console.log("Adding product:", productName, productPrice);
+    // console.log("Adding product:", productName, productPrice);
 
     const res = await axios.post("http://localhost:3000/api/v1/admin/addItem", {
         name : productName,
         price : productPrice,
+        key : key,
     }, {
         withCredentials : true
     });
@@ -35,15 +39,17 @@ const AddProductPopup = ({ isOpen, onClose, product, isUpdate }) => {
     
     setProductName("");
     setProductPrice("");
+    setKey("");
     onClose();
   };
 
   const handleUpdateProduct = async () => {
-    console.log("Updating product:", productName, productPrice);
+    // console.log("Updating product:", productName, productPrice);
 
     const res = await axios.put("http://localhost:3000/api/v1/admin/updateItem", {
         name : productName,
         price : productPrice,
+        key : key,
         id : product.id
     }, {
         withCredentials : true
@@ -87,6 +93,18 @@ const AddProductPopup = ({ isOpen, onClose, product, isUpdate }) => {
                 id="productPrice"
                 value={productPrice}
                 onChange={(e) => setProductPrice(e.target.value)}
+                className="border border-gray-300 rounded-md p-2 w-full"
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="productPrice" className="block font-medium">
+                Key 
+              </label>
+              <input
+                type="text"
+                id=""
+                value={key}
+                onChange={(e) => setKey(e.target.value)}
                 className="border border-gray-300 rounded-md p-2 w-full"
               />
             </div>

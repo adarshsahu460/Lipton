@@ -35,6 +35,7 @@ model MenuItems{
   @@unique([adminId, name])
   admin       Admin     @relation(fields: [adminId], references: [id])
   orders      Order[]
+  key         String?
 } 
 
 model Order{

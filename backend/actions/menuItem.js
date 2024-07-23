@@ -22,20 +22,22 @@ export async function searchMenuItem(str,adminId) {
         },select:{
             id:true,
             name:true,
-            price:true
+            price:true,
+            key : true
         }
     })
     return items
 }
 
 
-export async function addMenuitem(name,price,adminId){
+export async function addMenuitem(name,price,adminId, key){
     try{
         await prisma.menuItems.create({
             data:{
                 name,
                 price,
-                adminId: Number(adminId)
+                adminId: Number(adminId),
+                key : key
             }
         })
         return {
@@ -69,7 +71,7 @@ export async function deleteMenuitem(id){
     }
 }
 
-export async function updateMenuitem(id,name,price){
+export async function updateMenuitem(id,name,price,key){
     try{
         await prisma.menuItems.update({
             where:{
@@ -77,7 +79,8 @@ export async function updateMenuitem(id,name,price){
             },
             data:{
                 name,
-                price : Number(price)
+                price : Number(price),
+                key
             }
         })
         return {
