@@ -90,3 +90,12 @@ model Profit{
   profit  Int      
   date    DateTime @default(now())  @unique
 }
+
+model Gallery{
+  id Int @id @default(autoincrement())
+  url String
+  tag String?
+  createdAt DateTime @default(now())
+}
+
+

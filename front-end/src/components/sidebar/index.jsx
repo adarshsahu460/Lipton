@@ -35,6 +35,7 @@ export default function SideBar() {
                 <MenuItem title="Products" icon={<MdProductionQuantityLimits />} link="manage" />
                 <MenuItem title="Billing" icon={<MdProductionQuantityLimits />} link="bill" />
                 <MenuItem title="Users" icon={<MdProductionQuantityLimits />} link="users" />
+                <MenuItem title="Gallery" icon={<MdProductionQuantityLimits />} link="gallery" />
             </div>
         </div>
     );
