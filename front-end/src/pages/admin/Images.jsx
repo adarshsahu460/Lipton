@@ -1,24 +1,19 @@
 import axios from 'axios';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {storage} from '../../assets/config/firebase.js';
-import {ref,uploadBytes} from 'firebase/storage'
+import {getDownloadURL, ref,uploadBytes} from 'firebase/storage'
 
 export function Images() {
     const [file, setFile] = useState(null);
     const fileInputRef = useRef(null);
     const [tag, setTag] = useState("");
-    const [imageList, setImageList] = useState([{
-        url : "./uploads/1721720001003-Screenshot (210).png",
-        tag : "Samosa"
-    }]);
-    
-
-    const handleFileChange = (event) => {
-        setFile(event.target.files[0]);
-    };
-
+    const [imageList, setImageList] = useState([]);
     const handleTagChange = (event) => {
         setTag(event.target.value);
+    };
+    const getImages = async () => {
+        const response = await axios.get('http://localhost:3000/api/v1/admin/getImages',{withCredentials:true});
+        setImageList(response.data.message);
     };
     const [img,setImg] = useState("");
     const handleUpload = async () => {
@@ -32,9 +27,19 @@ export function Images() {
         const formattedDateTime = `${day}-${month}-${year}_${hours}-${minutes}-${seconds}`;
         const imgRef = ref(storage, `${tag} - ${formattedDateTime}.jpg`);
         await uploadBytes(imgRef, img);
-        // URL
-        // Axios.post ()
+        const downloadURL = await getDownloadURL(imgRef);
+        await axios.post('http://localhost:3000/api/v1/admin/uploadImage', {
+            tag,
+            url : downloadURL
+        },{
+            withCredentials : true
+        })
+        getImages()
     };
+
+    useEffect(()=>{
+        getImages();
+    },[])
 
     return (
         <div className="flex flex-col w-full bg-gray-100 min-h-screen p-8">
@@ -75,7 +80,7 @@ export function Images() {
                     <h2 className="text-3xl font-bold mb-6 text-gray-900">Your Images</h2>
                     {/* Add image display logic here */}
                     <div className="flex flex-wrap gap-4">
-                        {
+                        {   imageList && imageList.map && 
                             imageList.map((image, index) => {
                                 return (
                                     <div key={index} className="w-32 h-32 bg-gray-200 rounded-lg shadow-md flex items-center justify-center text-gray-500">

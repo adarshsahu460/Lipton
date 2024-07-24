@@ -280,23 +280,23 @@ app.get('/getProfit', async (req, res) => {
     return res.status(response.status).json({ message: response.message })
 })
 
-app.post('/uploadImage', upload.single('billImage'), async (req, res) => {
-    
-    if (!req.file) {
-        return res.status(400).json({ message: 'No file uploaded' });
-    }
-
-    const fileUrl = `./uploads/${req.file.filename}`;
-    const tag = req.body.tag;
-
-    const galleryEntry = await prisma.gallery.create({
+app.post('/uploadImage', async (req, res) => {
+    const {tag,url} = req.body
+    if (!url) return res.status(400).json({ message: "Please fill all the fields" })
+    console.log(tag,url)
+    await prisma.gallery.create({
         data: {
-            url: fileUrl,
-            tag : tag, 
-        },
-    });
-
-    return res.status(200).json({ message: 'File uploaded successfully', data: galleryEntry });
+            tag,
+            url
+        }
+    })
+    return res.status(200).json({ message: "Image uploaded successfully" })
 });
+
+app.get('/getImages', async (req, res) => {
+    const response = await prisma.gallery.findMany()
+    if(response.length === 0) return res.status(200).json({ message: "No images found" })
+    return res.status(200).json({ message: response })
+})
 
 export default app
