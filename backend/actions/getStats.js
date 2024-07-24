@@ -1,8 +1,8 @@
-import {  PrismaClient } from "@prisma/client"
 import { getAllPending } from "./pending.js";
 import { getProfit } from "./profit.js";
+import { PrismaSingleton } from "../db/index.js";
 
-const prisma = new PrismaClient();
+const prisma = PrismaSingleton.getInstance()
 
 async function getAdmin(adminId){
     const user = await prisma.admin.findUnique({

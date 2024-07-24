@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
 import bcrypt from 'bcrypt'
+import { PrismaSingleton } from "../db/index.js";
 
-const prisma = new PrismaClient()
+const prisma = PrismaSingleton.getInstance()
 
 export async function adminLogin(email, password) {
     const user = await prisma.admin.findFirst({

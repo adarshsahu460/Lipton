@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client"
+import { PrismaSingleton } from "../db/index.js";
 
-const prisma = new PrismaClient()
+const prisma = PrismaSingleton.getInstance()
 export default async function(email,pass,admin,name,mob){
     if(admin){
         try{

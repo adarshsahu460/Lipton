@@ -1,8 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { addProfit } from "./profit.js";
+import { PrismaSingleton } from "../db/index.js";
 
 
-const prisma = new PrismaClient()
+const prisma = PrismaSingleton.getInstance()
 export async function payLater(pending){
     const userMob = pending.mobile;
     const items = pending.items;

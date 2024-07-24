@@ -69,7 +69,7 @@ export function Users() {
                 <button
                   className="bg-green-500 text-white px-4 py-2 rounded-lg ml-4 hover:bg-green-600 transition duration-200"
                   onClick={() => {
-                      clearBalance(user.id,Number(pendingBill));
+                      clearBalance(user.id,pendingBill);
                   }}
                 >
                 Paid

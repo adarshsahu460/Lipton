@@ -21,16 +21,14 @@ export default function ManageProducts() {
     };
 
     const closePopup = () => {
+        fetchProducts()
         setIsPopupOpen(false);
         setIsUpdate(false);
     };
 
     const updateSelected = async (product) => {
         console.log(product);
-        await setSelectedProduct(product);
-        setSelectedProduct((prevProduct) => {
-            return product;
-        });
+        setSelectedProduct(product);
         setIsUpdate(true);
         openPopup();
     };
@@ -50,27 +48,27 @@ export default function ManageProducts() {
                 AlertBox(2, "Something Went Wrong");
             }
             setLoading(false)
+            fetchProducts()
         }catch(error){
             console.error(error);
             setLoading(false)
         }
     }
-
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                setLoading(true);
-                const res = await axios.get("http://localhost:3000/api/v1/admin/getItems?str=", {
-                    withCredentials: true,
-                });
-                setProductList(res.data);
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching product list:", error);
-                setLoading(false);
-            }
+    async function fetchProducts() {
+        try {
+            setLoading(true);
+            const res = await axios.get("http://localhost:3000/api/v1/admin/getItems?str=", {
+                withCredentials: true,
+            });
+            setProductList(res.data);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching product list:", error);
+            setLoading(false);
         }
-        fetchData();
+    }
+    useEffect(() => {
+        fetchProducts();
     }, []);
 
     return (

@@ -45,7 +45,6 @@ const AddProductPopup = ({ isOpen, onClose, product, isUpdate }) => {
 
   const handleUpdateProduct = async () => {
     // console.log("Updating product:", productName, productPrice);
-
     const res = await axios.put("http://localhost:3000/api/v1/admin/updateItem", {
         name : productName,
         price : productPrice,

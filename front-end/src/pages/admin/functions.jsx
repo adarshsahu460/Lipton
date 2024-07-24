@@ -40,17 +40,40 @@ export function printBill(products, total) {
         <table>
           <thead>
             <tr>
+              <th>SI No.</th>
               <th>Product</th>
-              <th>Quantity</th>
-              <th>Price</th>
+              <th>Unit Price</th>
+              <th>Qty</th>
+              <th>Net Amount</th>
+              <th>Tax Type</th>
+              <th>Tax Rate</th>
+              <th>Tax Amount</th>
+              <th>Total Amount</th>
             </tr>
           </thead>
           <tbody>
-            ${products.map(product => `
+            ${products.map((product,index) => `
               <tr>
+                <td>${index+1}</td>
                 <td>${product.name}</td>
-                <td>${product.quantity}</td>
-                <td>${product.price}</td>
+                <td>${(product.price / 1.18).toFixed(2)}</td>
+                <td>${product.qty}</td>
+                <td>${(Number(product.price) * Number(product.qty) / 1.18).toFixed(2)}</td>
+                <td>CGST</td>
+                <td>9%</td>
+                <td>${(Number(product.price) * Number(product.qty) * 0.09).toFixed(2)}</td>
+                <td>${Number(product.price) * Number(product.qty)}</td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>SGST</td>
+                <td>9%</td>
+                <td>${(Number(product.price) * Number(product.qty) * 0.09).toFixed(2)}</td>
+                <td></td>
               </tr>
             `).join('')}
           </tbody>
@@ -82,5 +105,9 @@ export async function PendingBill(mobile, myProducts, totalAmt) {
     },{
       withCredentials: true,
     }); 
-  AlertBox(1, res.data.message);
+  if(res.status == 200){
+    AlertBox(1, res.data.message);
+  }else{
+    AlertBox(2, res.data.message);
+  }
 }

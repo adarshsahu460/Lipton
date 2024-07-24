@@ -1,11 +1,12 @@
 import express from 'express'
-import { PrismaClient } from '@prisma/client'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import { PrismaSingleton } from "../db/index.js";
 
 const app = express.Router()
 app.use(cookieParser())
-const prisma = new PrismaClient()
+
+const prisma = PrismaSingleton.getInstance()
 app.use(cors({
     origin:'http://localhost:5173',
     credentials:true

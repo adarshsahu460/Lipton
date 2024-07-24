@@ -12,12 +12,11 @@ import {payLater,payNow} from '../actions/pay.js'
 import {getPending, getAllPending} from '../actions/pending.js'
 import { isAdminAuthenticated } from '../functions/isAuthenticated.js'
 import cookieParser from 'cookie-parser'
-import { PrismaClient } from '@prisma/client'
 import cors from 'cors'
 import getStats from '../actions/getStats.js'
 import { addProfit, getProfit } from '../actions/profit.js'
 import multer from 'multer'
-import { Prisma } from '@prisma/client'
+import { PrismaSingleton } from '../db/index.js'
 
 // new added code
 const storage = multer.diskStorage({
@@ -30,7 +29,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({storage : storage});
-const prisma = new PrismaClient();
+const prisma = PrismaSingleton.getInstance()
 
 
 // code ends here
@@ -204,9 +203,8 @@ app.get(`/getItems`, async (req, res) => {
 
 app.post(`/payLater`, async (req, res) => {
     const pending = req.body.pending
-
-    // const { success: mobileSuccess } = phoneNumberSchema.safeParse(pending.mobile)
-    // if(mobileSuccess) return res.status(400).json({ message: "Please provide a valid phone number" })
+    const { success: mobileSuccess } = phoneNumberSchema.safeParse(pending.mobile)
+    if(!mobileSuccess) return res.status(400).json({ message: "Please provide a valid phone number" })
 
     const response = await payLater(pending)
     return res.status(response.status).json({ message: response.message })
@@ -232,9 +230,8 @@ app.get('/getStats', async (req, res) => {
 app.post(`/payNow`, async (req, res) => {
     const {userId,amt} = req.body
     if(!userId ||!amt) return res.status(400).json({ message: "Please fill all the fields" })
-
-    // const {success:numberSuccess} = numberStringSchema.safeParse(amt)
-    // if(!numberSuccess) return res.status(400).json({ message: "Please    provide a valid amount" })
+    const {success:numberSuccess} = numberStringSchema.safeParse(amt)
+    if(!numberSuccess) return res.status(400).json({ message: "Please provide a valid amount" })
     
     const response = await payNow(userId,Number(amt))
     return res.status(response.status).json({ message: response.message })
@@ -252,8 +249,9 @@ app.post('/addItem', async (req, res) => {
 app.put('/updateItem', async (req, res) => {
     const { id, name, price, key } = req.body
     if (!name || !price || !id) return res.status(400).json({ message: "Please fill all the fields" })
-    // const {success:numberSuccess} = numberStringSchema.safeParse(price)
-    // if(!numberSuccess) return res.status(400).json({ message: "Please provide a valid price" })
+        
+    const {success:numberSuccess} = numberStringSchema.safeParse(price)
+    if(!numberSuccess) return res.status(400).json({ message: "Please provide a valid price" })
     
     const response = await updateMenuitem(id, name, price, key)
     return res.status(response.status).json({ message: response.message })
