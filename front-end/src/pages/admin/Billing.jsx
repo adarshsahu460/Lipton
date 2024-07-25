@@ -89,7 +89,7 @@ export function Billing() {
     }
   };
 
-  const addProfit = async()=>{
+  const addProfit = async ()=>{
     setLoading(true)
     await axios.post('http://localhost:3000/api/v1/admin/addProfit',{
         profit:totalAmt
@@ -108,6 +108,7 @@ export function Billing() {
       },{
         withCredentials: true,
       }); 
+      setMyProducts([]);
       AlertBox(1, res.data.message);
     }catch (error) {
       AlertBox(2, error.response.data.message);
@@ -135,6 +136,7 @@ export function Billing() {
             >
               <div className="font-semibold">{index + 1}</div>
               <div className="flex-1 ml-4">{product.name}</div>
+              <div className="flex-1 ml-4">[ {product.key} ]</div>
               <div className="flex-1 text-right font-semibold">${product.price.toFixed(2)}</div>
               <button
                 className="bg-green-500 text-white px-4 py-2 rounded-lg ml-4 shadow-lg hover:bg-green-600 transition duration-300 transform hover:scale-100"
@@ -188,9 +190,10 @@ export function Billing() {
             <div>
               <button
                 className="bg-green-600 text-white px-4 py-2 ml-4 rounded-lg shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-100"
-                onClick={() => {
-                  printBill(myProducts, totalAmt);
-                  addProfit()
+                onClick={async () => {
+                  await printBill(myProducts, totalAmt);
+                  await addProfit()
+                  setMyProducts([]);
                 }}
               >
                 Print

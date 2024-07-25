@@ -4,12 +4,8 @@ import { useNavigate } from 'react-router-dom';
 function Home() {
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    navigate('/admin/signin');
-  };
-
-  const handleSignUp = () => {
-    navigate('/admin/signup');
+  const handNavigate = (url) => {
+    navigate(url);
   };
 
   return (
@@ -21,13 +17,17 @@ function Home() {
           </div>
           <div>
             <button
-              onClick={handleLogin}
+              onClick={() => {
+                handNavigate("admin/signin")
+              }}
               className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-transform transform hover:scale-105 duration-300"
             >
               Login
             </button>
             <button
-              onClick={handleSignUp}
+              onClick={()=>{
+                handNavigate("admin/signup")
+              }}
               className="ml-4 bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-transform transform hover:scale-105 duration-300"
             >
               SignUp
@@ -46,13 +46,17 @@ function Home() {
         </p>
         <div className="mt-8">
           <button
-            onClick={handleLogin}
+            onClick={()=>{
+              handNavigate("user/signin")
+            }}
             className="bg-blue-600 text-white px-6 py-3 rounded-md text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 duration-300 mr-4 animate-bounce"
           >
             Get Started
           </button>
           <button
-            onClick={handleSignUp}
+            onClick={()=>{
+              handNavigate("user/signup")
+            }}
             className="bg-gray-800 text-white px-6 py-3 rounded-md text-lg hover:bg-gray-700 transition-transform transform hover:scale-105 duration-300 animate-bounce"
           >
             Learn More
