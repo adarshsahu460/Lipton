@@ -296,7 +296,54 @@ app.post('/uploadImage', async (req, res) => {
 app.get('/getImages', async (req, res) => {
     const response = await prisma.gallery.findMany()
     if(response.length === 0) return res.status(200).json({ message: "No images found" })
-    return res.status(200).json({ message: response })
+        return res.status(200).json({ message: response })
+})
+
+
+app.get('/getAllPendingAdmin', async (req,res)=>{
+    const pending = await prisma.admin.findMany({
+        where:{
+            verified:false
+        },
+        select : {
+            id : true,
+            email : true,
+            name : true,
+            mobile : true,
+        }
+    })
+
+    return res.status(200).json(pending)
+})
+
+app.post('/resolved',async (req,res)=>{
+    const id = req.body.id
+    const approve = req.body.approve
+
+    const admin = await prisma.admin.findUnique({
+        where:{
+            id:Number(id)
+        }
+    })
+    if(!admin) return res.status(400).json({message:"Invalid id"})  
+    if(approve == "1"){
+        await prisma.admin.update({
+            where:{
+                id:Number(id)
+            },
+            data:{
+                verified:true
+            }
+        })
+        return res.status(200).json({message:"Approved"})
+    }else{
+        await prisma.admin.delete({
+            where:{
+                id:Number(id)
+            }
+        })
+    }
+    return res.status(200).json({message:"Rejected"})
 })
 
 export default app

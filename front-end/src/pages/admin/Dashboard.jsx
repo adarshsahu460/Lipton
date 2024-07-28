@@ -8,6 +8,7 @@ import {Billing} from "./Billing.jsx"
 import { Users } from './Users.jsx';
 import axios from 'axios';
 import { Images } from './Images.jsx';
+import AdminList from './AdminList.jsx';
 
 const Dashboard = () => {
   const navigate = useNavigate()
@@ -32,6 +33,7 @@ const Dashboard = () => {
                       <Route path="bill" element={<Billing />} />
                       <Route path="users" element={<Users />} />
                       <Route path="/gallery" element={<Images />} />
+                      <Route path="/verify" element={<AdminList />} />
                   </Routes>
               </div>
             </div>
