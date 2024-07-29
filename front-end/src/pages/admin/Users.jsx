@@ -11,10 +11,11 @@ export function Users() {
   const [filter, setFilter] = useState("");
   const [pendingBill, setPendingBill] = useState("");
   const [loading,setLoading] = useState(false);
+  const URL = import.meta.env.VITE_PUBLIC_URL
   async function fetchData() {
     setLoading(true)
     const res = await axios.get(
-      "http://localhost:3000/api/v1/admin/getPending?str=" + filter,{
+      URL+"/admin/getPending?str=" + filter,{
         withCredentials: true,  
       }
     );
@@ -24,7 +25,7 @@ export function Users() {
   const clearBalance = async(userId,amt)=>{
     try{
         setLoading(true)
-        const response = await axios.post("http://localhost:3000/api/v1/admin/payNow",{
+        const response = await axios.post(URL+"/admin/payNow",{
           userId,
           amt
         },{

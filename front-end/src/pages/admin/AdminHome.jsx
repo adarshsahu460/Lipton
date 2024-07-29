@@ -8,10 +8,11 @@ const AdminHome = () => {
   const [pendingAmt, setPendingAmt] = useState(0);
   const [profitAmt, setProfitAmt] = useState(0); // Uncomment this line once the API provides the profit data
   const [loading, setLoading] = useState(false);
+  const URL = import.meta.env.VITE_PUBLIC_URL
   useEffect(() => {
     async function getData() {
       setLoading(true)
-      const res = await axios.get("http://localhost:3000/api/v1/admin/getStats", {
+      const res = await axios.get(`${URL}/admin/getStats`, {
         withCredentials: true,
       });
       setAdminData(res.data.message.admin);

@@ -6,13 +6,14 @@ import { useNavigate } from 'react-router-dom';
 const Console = () => {
   const [userDetails, setUserDetails] = useState({});
   const navigate = useNavigate()
+  const URL = import.meta.env.VITE_PUBLIC_URL
   useEffect(()=>{
-    axios.get("http://localhost:3000/api/v1/user/dashboard",{withCredentials:true}).then((res)=>{
+    axios.get(URL+"/user/dashboard",{withCredentials:true}).then((res)=>{
       setUserDetails(res.data.message)
     }).catch(e=>{navigate("/user/signin")})
   },[]);
   async function logout(){
-    await axios.get("http://localhost:3000/api/v1/user/logout",{withCredentials:true})
+    await axios.get(URL+"/user/logout",{withCredentials:true})
     AlertBox(1,"Logged out successfully")
     navigate("/user/signin")
   }

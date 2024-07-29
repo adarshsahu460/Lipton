@@ -10,6 +10,7 @@ export function Images() {
   const [tag, setTag] = useState("");
   const [imageList, setImageList] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const URL = import.meta.env.VITE_PUBLIC_URL
 
   const openPopup = (image) => {
     setSelectedImage(image);
@@ -25,7 +26,7 @@ export function Images() {
 
   const getImages = async () => {
     const response = await axios.get(
-      "http://localhost:3000/api/v1/admin/getImages",
+      URL+"/admin/getImages",
       { withCredentials: true }
     );
     setImageList(response.data.message);
@@ -45,7 +46,7 @@ export function Images() {
     await uploadBytes(imgRef, img);
     const downloadURL = await getDownloadURL(imgRef);
     await axios.post(
-      "http://localhost:3000/api/v1/admin/uploadImage",
+      URL+"/admin/uploadImage",
       {
         tag,
         url: downloadURL,

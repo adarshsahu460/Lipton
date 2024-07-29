@@ -12,9 +12,9 @@ export function SignIn(){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigation = useNavigate();
-
+    const URL = import.meta.env.VITE_PUBLIC_URL
     useEffect(()=>{
-        axios.get("http://localhost:3000/api/v1/admin/login",{withCredentials:true}).then(()=>{navigation('/admin/dashboard/bill')}).catch((e)=>{
+        axios.get(URL+"/admin/login",{withCredentials:true}).then(()=>{navigation('/admin/dashboard/bill')}).catch((e)=>{
             
         })
 
@@ -22,7 +22,7 @@ export function SignIn(){
 
     async function SignInHelper (){
         try{
-            const res = await axios.post("http://localhost:3000/api/v1/admin/login", {
+            const res = await axios.post(URL+"/admin/login", {
                 email : email,
                 password : password
             },{

@@ -12,9 +12,10 @@ import AdminList from './AdminList.jsx';
 
 const Dashboard = () => {
   const navigate = useNavigate()
+  const URL = import.meta.env.VITE_PUBLIC_URL
 
   useEffect(()=>{
-    axios.get("http://localhost:3000/api/v1/admin/dashboard",{withCredentials:true}).catch(e=>{navigate("/admin/signin")})
+    axios.get(URL+"/admin/dashboard",{withCredentials:true}).catch(e=>{navigate("/admin/signin")})
   },[]);
   return (
     <>

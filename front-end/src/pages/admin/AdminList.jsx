@@ -4,11 +4,12 @@ import { AlertBox } from "../../components/AlertBox.jsx";
 
 export default function AdminList() {
   const [adminList, setAdminList] = useState([]);
+  const URL = import.meta.env.VITE_PUBLIC_URL
 
   useEffect(() => {
     async function getData() {
       try {
-        const res = await axios.get("http://localhost:3000/api/v1/admin/getAllPendingAdmin", {
+        const res = await axios.get(URL+"/admin/getAllPendingAdmin", {
           withCredentials: true,
         });
         setAdminList(res.data);
@@ -21,7 +22,7 @@ export default function AdminList() {
 
   async function changeStatus(admin, approve) {
     try {
-      const res = await axios.post("http://localhost:3000/api/v1/admin/resolved", {
+      const res = await axios.post(URL+"/admin/resolved", {
         id: admin.id,
         approve: approve,
       }, {

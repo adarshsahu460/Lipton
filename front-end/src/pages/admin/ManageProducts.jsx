@@ -15,6 +15,7 @@ export default function ManageProducts() {
         price: 0,
         key : ""
     });
+    const URL = import.meta.env.VITE_PUBLIC_URL
 
     const openPopup = () => {
         setIsPopupOpen(true);
@@ -36,7 +37,7 @@ export default function ManageProducts() {
     async function removeItem(product){
         try{
             setLoading(true)
-            const res = await axios.post("http://localhost:3000/api/v1/admin/deleteItem", {
+            const res = await axios.post(URL+"/admin/deleteItem", {
                 id : product.id
             }, {
                 withCredentials : true
@@ -57,7 +58,7 @@ export default function ManageProducts() {
     async function fetchProducts() {
         try {
             setLoading(true);
-            const res = await axios.get("http://localhost:3000/api/v1/admin/getItems?str=", {
+            const res = await axios.get(URL+"/admin/getItems?str=", {
                 withCredentials: true,
             });
             setProductList(res.data);

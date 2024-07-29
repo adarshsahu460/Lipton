@@ -11,6 +11,7 @@ export function Billing() {
     margin: "0 auto",
     borderColor: "red",
   };  
+  const URL = import.meta.env.VITE_PUBLIC_URL
   const [productList, setProductList] = useState([]);
   const [filter, setFilter] = useState("");
   const [color, setColor] = useState("#ffffff");
@@ -26,7 +27,7 @@ export function Billing() {
   async function fetchData() {
     setLoading(true)
     const res = await axios.get(
-      "http://localhost:3000/api/v1/admin/getItems?str=" + filter, {
+      URL+"/admin/getItems?str=" + filter, {
         withCredentials: true,
       }
     );
@@ -91,7 +92,7 @@ export function Billing() {
 
   const addProfit = async ()=>{
     setLoading(true)
-    await axios.post('http://localhost:3000/api/v1/admin/addProfit',{
+    await axios.post(URL+'/admin/addProfit',{
         profit:totalAmt
     },{
       withCredentials:true
@@ -100,7 +101,7 @@ export function Billing() {
   }
   async function PendingBill(mobile, myProducts, totalAmt) {
     try {
-      const res = await axios.post("http://localhost:3000/api/v1/admin/payLater",{
+      const res = await axios.post(URL+"/admin/payLater",{
         pending : {
             mobile : mobile,
             items : myProducts

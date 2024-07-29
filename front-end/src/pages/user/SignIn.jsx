@@ -12,16 +12,17 @@ export function SignIn(){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigation = useNavigate();
+    const URL = import.meta.env.VITE_PUBLIC_URL
 
     useEffect(()=>{
-        axios.get("http://localhost:3000/api/v1/user/login",{withCredentials:true}).then(()=>{
+        axios.get(URL+"/user/login",{withCredentials:true}).then(()=>{
             navigation('/user/dashboard')
-        }).catch((e)=>{})
+        }).catch((e)=>{})   
     },[])
 
     async function SignInHelper (){ 
         try{
-            const res = await axios.post("http://localhost:3000/api/v1/user/login", {
+            const res = await axios.post(URL+"/user/login", {
                 email : email,
                 password : password
             },{

@@ -34,7 +34,7 @@ model MenuItems{
   category    String    @default("a")
   adminId     Int       // foreign key
   @@unique([adminId, name])
-  admin       Admin     @relation(fields: [adminId], references: [id])
+  admin       Admin     @relation(fields: [adminId], references: [id], onDelete: Cascade,onUpdate: Cascade)
   orders      Order[]
   key         String?
 } 
@@ -44,8 +44,8 @@ model Order{
   userId    Int      // foreign key
   itemId    Int      // foreign key
   quantity  Int
-  user      User     @relation(fields: [userId], references: [id])
-  item      MenuItems @relation(fields: [itemId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade,onUpdate: Cascade)
+  item      MenuItems @relation(fields: [itemId], references: [id], onDelete: Cascade,onUpdate: Cascade)
   createdAt DateTime @default(now())
 }
 
@@ -65,7 +65,7 @@ model UserOTP{
   id        Int      @id @default(autoincrement())
   otp       String   
   userId    Int      @unique
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade,onUpdate: Cascade)
   createdAt DateTime @default(now())
 }
 
@@ -74,7 +74,7 @@ model AdminOTP{
   id        Int      @id @default(autoincrement())
   otp       String   
   adminID   Int      @unique
-  admin     Admin    @relation(fields: [adminID], references: [id])
+  admin     Admin    @relation(fields: [adminID], references: [id], onDelete: Cascade,onUpdate: Cascade)
   createdAt DateTime @default(now())
 }
 

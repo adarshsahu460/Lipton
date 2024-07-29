@@ -14,6 +14,7 @@ export function SignUp(){
     const [password, setPassword] = useState("");
     const [mobile, setMobile] = useState("");
     const navigation = useNavigate();
+    const URL = import.meta.env.VITE_PUBLIC_URL
 
     function getAlert(type,msg){
         AlertBox(type,msg);
@@ -21,7 +22,7 @@ export function SignUp(){
 
     async function SignUpHelper (){
         try{
-            const res = await axios.post("http://localhost:3000/api/v1/user/register", {
+            const res = await axios.post(URL+"/user/register", {
                 email : email,
                 password : password,
                 mobile : mobile,

@@ -14,17 +14,18 @@ export function Forgot(){
     const [password, setPassword] = useState("");
     const [cpassword, setCPassword] = useState("");
     const [otp, setOtp] = useState("");
+    const URL = import.meta.env.VITE_PUBLIC_URL
 
     async function ForgotHelper (){
         try{
             if(password == "" || (password != cpassword)){
                 AlertBox(2,"Please enter the password again"); return;
             }
-            const res = await axios.post("http://localhost:3000/api/v1/user/verify", {
+            const res = await axios.post(URL+"/user/verify", {
                 email : email,
                 otp : otp
             });
-            const res1 = await axios.put("http://localhost:3000/api/v1/user/updatePass", {
+            const res1 = await axios.put(URL+"/user/updatePass", {
                 email : email,
                 password : password
             });
@@ -36,7 +37,7 @@ export function Forgot(){
 
     async function getOTP(){
         console.log(email);
-        const res = await axios.post("http://localhost:3000/api/v1/user/forgot", {
+        const res = await axios.post(URL+"/user/forgot", {
             email : email
         });
 
