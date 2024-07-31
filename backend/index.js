@@ -4,6 +4,7 @@ import cors from "cors";
 import adminRouter from './routes/admin.js'
 import userRouter from './routes/user.js'
 import devRouter from './routes/dev.js'
+import { rateLimiter } from './functions/rateLimiter.js';
 
 const app = express()
 
@@ -13,13 +14,14 @@ app.use(cors({
 }));
 app.use(express.json())
 dotenv.config();
+app.use(rateLimiter)
 app.get('/',(req,res)=>{
     return res.json({
         message:"Hello World"
     })
 })
-app.use(`${process.env.URL}/admin`, adminRouter)
-app.use(`${process.env.URL}/user`, userRouter)
+app.use(`${process.env.URL}/admin`,(req,res,next)=>{console.log("admin");next()}, adminRouter)
+app.use(`${process.env.URL}/user`,(req,res,next)=>{console.log("user");next()}, userRouter)
 app.use(`${process.env.URL}/dev`, devRouter)
 
 app.get('*',(req,res)=>{
