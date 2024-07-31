@@ -20,8 +20,8 @@ app.get('/',(req,res)=>{
         message:"Hello World"
     })
 })
-app.use(`${process.env.URL}/admin`,(req,res,next)=>{console.log("admin");next()}, adminRouter)
-app.use(`${process.env.URL}/user`,(req,res,next)=>{console.log("user");next()}, userRouter)
+app.use(`${process.env.URL}/admin`, adminRouter)
+app.use(`${process.env.URL}/user`, userRouter)
 app.use(`${process.env.URL}/dev`, devRouter)
 
 app.get('*',(req,res)=>{
