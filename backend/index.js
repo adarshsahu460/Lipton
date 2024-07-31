@@ -4,7 +4,6 @@ import cors from "cors";
 import adminRouter from './routes/admin.js'
 import userRouter from './routes/user.js'
 import devRouter from './routes/dev.js'
-import { rateLimiter } from './functions/rateLimiter.js';
 
 const app = express()
 
@@ -14,7 +13,7 @@ app.use(cors({
 }));
 app.use(express.json())
 dotenv.config();
-app.use(rateLimiter)
+
 app.get('/',(req,res)=>{
     return res.json({
         message:"Hello World"

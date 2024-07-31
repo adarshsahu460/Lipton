@@ -12,6 +12,8 @@ import { isUserAuthenticated } from '../functions/isAuthenticated.js'
 import cors from 'cors'
 import getUserDetails from '../functions/getUserDetails.js'
 import { PrismaSingleton } from "../db/index.js";
+import { rateLimiter } from './functions/rateLimiter.js';
+
 
 const prisma = PrismaSingleton.getInstance()
 const app = express.Router()
@@ -20,7 +22,7 @@ app.use(cors({
     origin:'http://localhost:5173',
     credentials:true
 }));
-
+app.use(rateLimiter)
 app.get(`/login`, async (req, res) => {
     const auth = req.cookies['lipton-cookie-user']
     if(!auth) return res.status(400).json({message:"Invalid token"})
